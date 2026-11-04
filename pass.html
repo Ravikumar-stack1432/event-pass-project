@@ -2,8 +2,8 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>डिजिटल परिचय पत्र / Digital Event Pass</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>डिजिटल परिचय पत्र</title>
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
@@ -14,321 +14,341 @@
     }
 
     body {
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #eef2f7;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+      background: #e2e8f0;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 15px;
+      padding: 10px;
     }
 
-    /* THE PUBLIC STANDALONE PASS CARD */
+    /* ONLY THE PASS CARD - NOTHING ELSE */
     .pass-card {
       width: 100%;
-      max-width: 340px;
-      background: #fffdf6;
-      border: 2px solid #dfb15b;
-      border-radius: 14px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      max-width: 390px;
+      background: #fdf5df;
+      background: radial-gradient(circle at 50% 30%, #fffbe8 0%, #f7e6b5 100%);
+      border: 3px solid #d4a034;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
       overflow: hidden;
       position: relative;
-      background-image: radial-gradient(#f8e4bc 1px, transparent 1px);
-      background-size: 14px 14px;
     }
 
-    /* Top Decorative Banner */
-    .pass-banner {
-      background: linear-gradient(135deg, #c0392b, #d35400);
-      color: white;
+    /* Top Striped Ribbon */
+    .hazard-stripe {
+      height: 10px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #b81d18,
+        #b81d18 8px,
+        #f5c518 8px,
+        #f5c518 16px
+      );
+      margin-bottom: 8px;
+    }
+
+    /* Header */
+    .card-head {
       text-align: center;
-      padding: 16px 12px 12px;
-      position: relative;
+      padding: 10px 10px 0;
     }
 
-    .pass-banner h1 {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    .univ-name {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #9c1511;
+      letter-spacing: 0.3px;
       line-height: 1.3;
-      text-transform: uppercase;
     }
 
-    .pass-tag {
+    .event-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #80100d;
+      margin-top: 3px;
+    }
+
+    .badge-ribbon {
       display: inline-block;
-      margin-top: 6px;
-      background: rgba(0, 0, 0, 0.25);
+      background: #c98e1f;
+      color: white;
       font-size: 12px;
-      font-weight: 600;
-      padding: 3px 14px;
-      border-radius: 20px;
+      font-weight: 700;
+      padding: 2px 24px;
+      margin-top: 5px;
+      border-radius: 3px;
       letter-spacing: 0.5px;
     }
 
-    /* Photo Frame */
-    .photo-container {
-      text-align: center;
-      margin-top: 15px;
+    /* Center Section: Photo on Left, Serial + QR on Right */
+    .center-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 12px 14px 6px;
+      gap: 10px;
     }
 
-    .photo-box {
-      width: 110px;
-      height: 130px;
-      border: 2.5px solid #485460;
+    .photo-frame {
+      width: 125px;
+      height: 155px;
+      border: 3px solid #b8860b;
       border-radius: 6px;
-      margin: 0 auto;
       overflow: hidden;
-      background: #d2dae2;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      background: #e2e8f0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      flex-shrink: 0;
     }
 
-    .photo-box img {
+    .photo-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
-    /* Pass ID */
-    .pass-serial {
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: #1e272e;
-      margin-top: 8px;
-      letter-spacing: 1px;
-    }
-
-    /* Body Details & QR Code */
-    .pass-body {
+    .qr-column {
       display: flex;
-      padding: 12px 16px 16px;
-      gap: 12px;
-    }
-
-    .pass-info {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      font-size: 12.5px;
     }
 
-    .info-row {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .info-label {
-      font-size: 10.5px;
-      color: #808e9b;
-      font-weight: 600;
-    }
-
-    .info-val {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e272e;
-    }
-
-    .pass-qr-wrap {
-      width: 92px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #qr-target {
-      background: white;
-      padding: 4px;
-      border: 1px solid #d2dae2;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 82px;
-      min-height: 82px;
-    }
-
-    .qr-text {
-      font-size: 9.5px;
-      color: #808e9b;
-      font-weight: 600;
-      margin-top: 4px;
-      text-align: center;
-    }
-
-    /* Footer */
-    .pass-footer {
-      background: #c0392b;
-      color: white;
-      text-align: center;
-      padding: 7px;
-      font-size: 10.5px;
-      font-weight: 500;
+    .serial-box {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 6px;
       letter-spacing: 0.5px;
+      text-align: center;
     }
 
-    /* Bottom Print Button */
-    .bottom-actions {
-      margin-top: 18px;
-      display: flex;
-      gap: 12px;
-    }
-
-    .action-btn {
-      background: #2c3e50;
-      color: white;
-      border: none;
-      padding: 9px 18px;
+    /* QR Code Container with 100% Crisp White Quiet Zone */
+    .qr-white-box {
+      background: #ffffff;
+      padding: 8px;
+      border: 1.5px solid #222;
       border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
-    .action-btn:hover {
-      background: #1a252f;
+    .qr-white-box img,
+    .qr-white-box canvas {
+      display: block;
+      width: 108px !important;
+      height: 108px !important;
     }
 
-    /* Print View */
+    /* Details Table */
+    .details-table {
+      padding: 10px 18px 12px;
+      font-size: 13.5px;
+      color: #111;
+    }
+
+    .table-row {
+      display: flex;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    .col-label {
+      width: 105px;
+      font-weight: 700;
+      color: #1a1a1a;
+      flex-shrink: 0;
+    }
+
+    .col-colon {
+      width: 15px;
+      font-weight: 700;
+    }
+
+    .col-val {
+      flex: 1;
+      font-weight: 700;
+      color: #000;
+    }
+
+    /* Authorised Signatures Row */
+    .sign-row {
+      display: flex;
+      border-top: 1px solid #d4a034;
+      border-bottom: 1px solid #d4a034;
+      background: rgba(255, 255, 255, 0.45);
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      padding: 4px 6px;
+    }
+
+    .sign-col {
+      flex: 1;
+      border-right: 1px solid #d4a034;
+      padding: 2px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sign-col:last-child {
+      border-right: none;
+    }
+
+    /* Emergency Footer Strip */
+    .emergency-bar {
+      background: #b81d18;
+      color: #ffffff;
+      text-align: center;
+      padding: 7px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
     @media print {
-      body {
-        background: white;
-        padding: 0;
-      }
-      .bottom-actions {
-        display: none !important;
-      }
-      .pass-card {
-        box-shadow: none;
-        margin: 20px auto;
-        border: 2px solid #000;
-      }
+      body { background: white; padding: 0; }
+      .pass-card { box-shadow: none; margin: 0 auto; border: 2px solid #b8860b; }
     }
   </style>
 </head>
 <body>
 
-  <!-- THE PASS CARD -->
-  <div class="pass-card">
-    <div class="pass-banner">
-      <h1 id="passEvent">दीपोत्सव 2026, अयोध्या</h1>
-      <span class="pass-tag" id="passRole">स्वयंसेवक</span>
+  <!-- ONLY THE PASS CARD -->
+  <div class="pass-card" id="printableCard">
+    <div class="hazard-stripe"></div>
+
+    <div class="card-head">
+      <div class="univ-name" id="dispUniv">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय</div>
+      <div class="event-title" id="dispEvent">दीपोत्सव 2026, अयोध्या</div>
+      <div class="badge-ribbon" id="dispBadge">परिचय पत्र</div>
     </div>
 
-    <div class="photo-container">
-      <div class="photo-box">
-        <img id="passPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80" alt="Pass Photo">
+    <!-- Center: Photo & QR -->
+    <div class="center-section">
+      <div class="photo-frame">
+        <img id="dispPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80" alt="Pass Photo">
+      </div>
+
+      <div class="qr-column">
+        <div class="serial-box" id="dispSerial">क्र. G09-05739</div>
+        <div class="qr-white-box" id="qrContainer">
+          <!-- Big, Crisp, Easy to Scan QR Code -->
+          <img id="qrImage" src="" alt="QR Code">
+        </div>
       </div>
     </div>
 
-    <div class="pass-serial" id="passId">क्र. G09-05739</div>
-
-    <div class="pass-body">
-      <div class="pass-info">
-        <div class="info-row">
-          <span class="info-label">नाम:</span>
-          <span class="info-val" id="passName">अंशुमन</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">संस्था/इकाई:</span>
-          <span class="info-val" id="passDept">Dr Rammanohar Lohia Avadh University</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">मोबाइल नं.:</span>
-          <span class="info-val" id="passMobile">9161914850</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">तैनाती स्थल:</span>
-          <span class="info-val" id="passDuty">राम की पैड़ी घाट नं : 9</span>
-        </div>
+    <!-- Details Table -->
+    <div class="details-table">
+      <div class="table-row">
+        <span class="col-label">नाम</span>
+        <span class="col-colon">:</span>
+        <span class="col-val" id="dispName">अंशुमन</span>
       </div>
 
-      <div class="pass-qr-wrap">
-        <div id="qr-target"></div>
-        <span class="qr-text">Scan for Pass</span>
+      <div class="table-row">
+        <span class="col-label">संस्था/इकाई</span>
+        <span class="col-colon">:</span>
+        <span class="col-val" id="dispDept">Dr Rammanohar Lohia Awadh University Ayodhya</span>
+      </div>
+
+      <div class="table-row">
+        <span class="col-label">मोबाइल नं.</span>
+        <span class="col-colon">:</span>
+        <span class="col-val" id="dispMob">9161914850</span>
+      </div>
+
+      <div class="table-row">
+        <span class="col-label">तैनाती स्थल</span>
+        <span class="col-colon">:</span>
+        <span class="col-val" id="dispDuty">राम की पैड़ी घाट नं : 9</span>
+      </div>
+
+      <div class="table-row">
+        <span class="col-label">दायित्व</span>
+        <span class="col-colon">:</span>
+        <span class="col-val" id="dispRole">स्वयंसेवक</span>
       </div>
     </div>
 
-    <div class="pass-footer" id="passEmergency">
-      आपात संपर्क सूत्र : +91 8808160420 / +91 9170838005
+    <!-- Signatures placeholder bar -->
+    <div class="sign-row">
+      <div class="sign-col">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</div>
+      <div class="sign-col">नोडल अधिकारी</div>
+      <div class="sign-col">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</div>
     </div>
-  </div>
 
-  <!-- Bottom Buttons -->
-  <div class="bottom-actions">
-    <button class="action-btn" onclick="window.print()">🖨️ Print Pass / Save PDF</button>
+    <!-- Emergency Footer -->
+    <div class="emergency-bar" id="dispEmergency">
+      आपात संपर्क सूत्र - +91 8808160420 / +91 9170838005
+    </div>
   </div>
 
   <script>
-    // URL se details read karna
+    // Read parameters from URL (supports short keys and full keys)
     const params = new URLSearchParams(window.location.search);
 
-    const name = params.get('name') || 'अंशुमन';
     const id = params.get('id') || 'G09-05739';
-    const role = params.get('role') || 'स्वयंसेवक';
-    const dept = params.get('dept') || 'Dr Rammanohar Lohia Avadh University';
-    const duty = params.get('duty') || 'राम की पैड़ी घाट नं : 9';
-    const mob = params.get('mob') || '9161914850';
+    const name = params.get('n') || params.get('name') || 'अंशुमन';
+    const dept = params.get('dept') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
+    const mob = params.get('m') || params.get('mob') || '9161914850';
+    const duty = params.get('d') || params.get('duty') || 'राम की पैड़ी घाट नं : 9';
+    const role = params.get('r') || params.get('role') || 'स्वयंसेवक';
     const eventName = params.get('event') || 'दीपोत्सव 2026, अयोध्या';
-    const emergency = params.get('emg') || '+91 8808160420 / +91 9170838005';
     const photo = params.get('photo');
 
-    // Populate fields
-    document.getElementById('passName').textContent = name;
-    document.getElementById('passId').textContent = 'क्र. ' + id;
-    document.getElementById('passRole').textContent = role.toUpperCase();
-    document.getElementById('passDept').textContent = dept;
-    document.getElementById('passDuty').textContent = duty;
-    document.getElementById('passMobile').textContent = mob;
-    document.getElementById('passEvent').textContent = eventName;
-    document.getElementById('passEmergency').textContent = 'आपात संपर्क सूत्र : ' + emergency;
+    // Populate data
+    document.getElementById('dispSerial').textContent = 'क्र. ' + id;
+    document.getElementById('dispName').textContent = name;
+    document.getElementById('dispDept').textContent = dept;
+    document.getElementById('dispMob').textContent = mob;
+    document.getElementById('dispDuty').textContent = duty;
+    document.getElementById('dispRole').textContent = role;
+    document.getElementById('dispEvent').textContent = eventName;
 
-    const photoElem = document.getElementById('passPhoto');
+    // Photo
+    const photoElem = document.getElementById('dispPhoto');
     if (photo) {
       photoElem.src = photo;
     } else {
-      const localPhoto = localStorage.getItem('local_pass_photo');
-      if (localPhoto) {
-        photoElem.src = localPhoto;
+      const savedPhoto = localStorage.getItem('local_pass_photo');
+      if (savedPhoto) {
+        photoElem.src = savedPhoto;
       }
     }
 
-    // QR Code Generation with Fallback
-    const qrTarget = document.getElementById('qr-target');
+    // Generate High-Contrast, Instant-Scan QR Code
+    // Uses current page URL so scanning opens this EXACT pass
     const currentPassUrl = window.location.href;
-    try {
+    const qrImg = document.getElementById('qrImage');
+    
+    // High-resolution (300x300) with proper quiet zone margin=2 for 100% instant phone scan
+    const fastQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
+    qrImg.src = fastQrUrl;
+
+    // Offline / CDN fallback if api.qrserver takes time
+    qrImg.onerror = function() {
+      const container = document.getElementById('qrContainer');
+      container.innerHTML = '';
       if (typeof QRCode !== 'undefined') {
-        new QRCode(qrTarget, {
+        new QRCode(container, {
           text: currentPassUrl,
-          width: 82,
-          height: 82,
-          colorDark: "#1e272e",
+          width: 108,
+          height: 108,
+          colorDark: "#000000",
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.L
         });
-      } else {
-        const img = document.createElement('img');
-        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=' + encodeURIComponent(currentPassUrl);
-        img.alt = 'QR Code';
-        img.width = 82;
-        img.height = 82;
-        qrTarget.appendChild(img);
       }
-    } catch (err) {
-      const img = document.createElement('img');
-      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=' + encodeURIComponent(currentPassUrl);
-      img.alt = 'QR Code';
-      img.width = 82;
-      img.height = 82;
-      qrTarget.appendChild(img);
-    }
+    };
   </script>
 </body>
 </html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>डिजिटल परिचय पत्र / Digital Event Pass</title>
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #eef2f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    /* THE PUBLIC STANDALONE PASS CARD */
+    .pass-card {
+      width: 100%;
+      max-width: 340px;
+      background: #fffdf6;
+      border: 2px solid #dfb15b;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      position: relative;
+      background-image: radial-gradient(#f8e4bc 1px, transparent 1px);
+      background-size: 14px 14px;
+    }
+
+    /* Top Decorative Banner */
+    .pass-banner {
+      background: linear-gradient(135deg, #c0392b, #d35400);
+      color: white;
+      text-align: center;
+      padding: 16px 12px 12px;
+      position: relative;
+    }
+
+    .pass-banner h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    .pass-tag {
+      display: inline-block;
+      margin-top: 6px;
+      background: rgba(0, 0, 0, 0.25);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Photo Frame */
+    .photo-container {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .photo-box {
+      width: 110px;
+      height: 130px;
+      border: 2.5px solid #485460;
+      border-radius: 6px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #d2dae2;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Pass ID */
+    .pass-serial {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e272e;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    /* Body Details & QR Code */
+    .pass-body {
+      display: flex;
+      padding: 12px 16px 16px;
+      gap: 12px;
+    }
+
+    .pass-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 12.5px;
+    }
+
+    .info-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      font-size: 10.5px;
+      color: #808e9b;
+      font-weight: 600;
+    }
+
+    .info-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e272e;
+    }
+
+    .pass-qr-wrap {
+      width: 92px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #qr-target {
+      background: white;
+      padding: 4px;
+      border: 1px solid #d2dae2;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-text {
+      font-size: 9.5px;
+      color: #808e9b;
+      font-weight: 600;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    /* Footer */
+    .pass-footer {
+      background: #c0392b;
+      color: white;
+      text-align: center;
+      padding: 7px;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* Bottom Print Button */
+    .bottom-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .action-btn {
+      background: #2c3e50;
+      color: white;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-btn:hover {
+      background: #1a252f;
+    }
+
+    /* Print View */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .bottom-actions {
+        display: none !important;
+      }
+      .pass-card {
+        box-shadow: none;
+        margin: 20px auto;
+        border: 2px solid #000;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- THE PASS CARD -->
+  <div class="pass-card">
+    <div class="pass-banner">
+      <h1 id="passEvent">EVENT PASS 2026</h1>
+      <span class="pass-tag" id="passRole">VOLUNTEER PASS</span>
+    </div>
+
+    <div class="photo-container">
+      <div class="photo-box">
+        <img id="passPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80" alt="Pass Photo">
+      </div>
+    </div>
+
+    <div class="pass-serial" id="passId">क्र. VOL-2026-001</div>
+
+    <div class="pass-body">
+      <div class="pass-info">
+        <div class="info-row">
+          <span class="info-label">नाम / Name:</span>
+          <span class="info-val" id="passName">Student Name</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">संस्था / Dept:</span>
+          <span class="info-val" id="passDept">Department Name</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">मोबाइल नं. / Mob:</span>
+          <span class="info-val" id="passMobile">9XXXXXXXXX</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">तैनाती स्थल / Duty:</span>
+          <span class="info-val" id="passDuty">Main Gate Area</span>
+        </div>
+      </div>
+
+      <div class="pass-qr-wrap">
+        <div id="qr-target"></div>
+        <span class="qr-text">Scan for Pass</span>
+      </div>
+    </div>
+
+    <div class="pass-footer" id="passEmergency">
+      आपात संपर्क सूत्र : +91 8808160420
+    </div>
+  </div>
+
+  <!-- Bottom Buttons (Only Print) -->
+  <div class="bottom-actions">
+    <button class="action-btn" onclick="window.print()">🖨️ Print Pass / Save PDF</button>
+  </div>
+
+  <script>
+    // URL se details read karna
+    const params = new URLSearchParams(window.location.search);
+
+    const name = params.get('name') || 'Anshuman Kumar';
+    const id = params.get('id') || 'VOL-2026-057';
+    const role = params.get('role') || 'स्वयंसेवक / VOLUNTEER';
+    const dept = params.get('dept') || 'University Campus';
+    const duty = params.get('duty') || 'Gate No. 4';
+    const mob = params.get('mob') || '9161914850';
+    const eventName = params.get('event') || 'ANNUAL EVENT 2026';
+    const emergency = params.get('emg') || '+91 8808160420';
+    const photo = params.get('photo');
+
+    // Display elements populate karna
+    document.getElementById('passName').textContent = name;
+    document.getElementById('passId').textContent = 'क्र. ' + id;
+    document.getElementById('passRole').textContent = role.toUpperCase();
+    document.getElementById('passDept').textContent = dept;
+    document.getElementById('passDuty').textContent = duty;
+    document.getElementById('passMobile').textContent = mob;
+    document.getElementById('passEvent').textContent = eventName;
+    document.getElementById('passEmergency').textContent = 'आपात संपर्क सूत्र : ' + emergency;
+
+    if (photo) {
+      document.getElementById('passPhoto').src = photo;
+    }
+
+    // QR Code: Is pass ke current live page ka URL encode karega
+    const currentPassUrl = window.location.href;
+    new QRCode(document.getElementById('qr-target'), {
+      text: currentPassUrl,
+      width: 82,
+      height: 82,
+      colorDark: "#1e272e",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  </script>
+</body>
+</html>

@@ -30,29 +30,35 @@ const shareableLinkInput = document.getElementById('shareableLinkInput');
 const btnOpenPass = document.getElementById('btnOpenPass');
 const copyFeedback = document.getElementById('copyFeedback');
 
-// Default fallback photo
-const DEFAULT_PHOTO = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80";
+// Public Live Domain
+const LIVE_BASE_URL = "https://ravikumar-stack1432.github.io/event-pass-project/";
 
 // Function to generate the Public Pass URL (pointing to pass.html)
 function getPublicPassUrl() {
-  const currentUrl = window.location.href.split('?')[0].split('#')[0];
-  const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+  let baseUrl;
+  // If running from local PC (file:// or localhost), ALWAYS use the live GitHub Pages URL so phones can open it!
+  if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseUrl = LIVE_BASE_URL;
+  } else {
+    const currentUrl = window.location.href.split('?')[0].split('#')[0];
+    baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+  }
+
   const passPage = baseUrl + 'pass.html';
 
   const params = new URLSearchParams({
-    id: inputPassId.value.trim() || 'VOL-2026-001',
-    name: inputName.value.trim() || 'Student Name',
-    role: inputRole.value.trim() || 'Volunteer',
-    dept: inputDept.value.trim() || 'University Campus',
-    duty: inputDuty.value.trim() || 'Main Gate',
-    mob: inputMobile.value.trim() || '9XXXXXXXXX',
-    event: inputEvent.value.trim() || 'Annual Event 2026',
-    emg: inputEmergency.value.trim() || '+91 8808160420'
+    id: (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739',
+    name: (inputName ? inputName.value.trim() : '') || 'अंशुमन',
+    role: (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक',
+    dept: (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Avadh University',
+    duty: (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9',
+    mob: (inputMobile ? inputMobile.value.trim() : '') || '9161914850',
+    event: (inputEvent ? inputEvent.value.trim() : '') || 'दीपोत्सव 2026, अयोध्या',
+    emg: (inputEmergency ? inputEmergency.value.trim() : '') || '+91 8808160420 / +91 9170838005'
   });
 
-  // If a photo URL is specified
-  const photoUrl = inputPhotoUrl.value.trim();
-  if (photoUrl) {
+  const photoUrl = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
+  if (photoUrl && !photoUrl.startsWith('data:image')) {
     params.set('photo', photoUrl);
   }
 
@@ -61,25 +67,25 @@ function getPublicPassUrl() {
 
 // Function to update preview and link
 function updatePass() {
-  const nameVal = inputName.value.trim() || 'Student Name';
-  const roleVal = inputRole.value.trim() || 'VOLUNTEER PASS';
-  const idVal = inputPassId.value.trim() || 'VOL-2026-001';
-  const deptVal = inputDept.value.trim() || 'Department Name';
-  const mobVal = inputMobile.value.trim() || '9XXXXXXXXX';
-  const dutyVal = inputDuty.value.trim() || 'Main Gate Area';
-  const eventVal = inputEvent.value.trim() || 'EVENT PASS 2026';
-  const emgVal = inputEmergency.value.trim() || '+91 8808160420';
+  const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
+  const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Avadh University';
+  const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
+  const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
+  const eventVal = (inputEvent ? inputEvent.value.trim() : '') || 'दीपोत्सव 2026, अयोध्या';
+  const emgVal = (inputEmergency ? inputEmergency.value.trim() : '') || '+91 8808160420 / +91 9170838005';
 
-  dispName.textContent = nameVal;
-  dispRole.textContent = roleVal.toUpperCase();
-  dispPassId.textContent = 'क्र. ' + idVal;
-  dispDept.textContent = deptVal;
-  dispMobile.textContent = mobVal;
-  dispDuty.textContent = dutyVal;
-  dispEvent.textContent = eventVal;
-  dispEmergency.textContent = 'आपात संपर्क सूत्र : ' + emgVal;
+  if (dispName) dispName.textContent = nameVal;
+  if (dispRole) dispRole.textContent = roleVal.toUpperCase();
+  if (dispPassId) dispPassId.textContent = 'क्र. ' + idVal;
+  if (dispDept) dispDept.textContent = deptVal;
+  if (dispMobile) dispMobile.textContent = mobVal;
+  if (dispDuty) dispDuty.textContent = dutyVal;
+  if (dispEvent) dispEvent.textContent = eventVal;
+  if (dispEmergency) dispEmergency.textContent = 'आपात संपर्क सूत्र : ' + emgVal;
 
-  if (inputPhotoUrl.value.trim()) {
+  if (inputPhotoUrl && inputPhotoUrl.value.trim() && dispPhoto) {
     dispPhoto.src = inputPhotoUrl.value.trim();
   }
 
@@ -92,36 +98,86 @@ function updatePass() {
     btnOpenPass.href = publicUrl;
   }
 
-  // Generate QR code pointing to pass.html
-  qrContainer.innerHTML = '';
-  if (typeof QRCode !== 'undefined') {
-    qrCodeInstance = new QRCode(qrContainer, {
-      text: publicUrl,
-      width: 82,
-      height: 82,
-      colorDark: "#1e272e",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
-    });
+  // Generate QR code safely with fallback
+  if (qrContainer) {
+    qrContainer.innerHTML = '';
+    try {
+      if (typeof QRCode !== 'undefined') {
+        qrCodeInstance = new QRCode(qrContainer, {
+          text: publicUrl,
+          width: 82,
+          height: 82,
+          colorDark: "#1e272e",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L
+        });
+      } else {
+        // Fallback to QR Server API if QRCode.js isn't loaded
+        const img = document.createElement('img');
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=' + encodeURIComponent(publicUrl);
+        img.alt = 'QR Code';
+        img.width = 82;
+        img.height = 82;
+        qrContainer.appendChild(img);
+      }
+    } catch (err) {
+      console.warn("QRCode local generation failed, using API fallback:", err);
+      const img = document.createElement('img');
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=' + encodeURIComponent(publicUrl);
+      img.alt = 'QR Code';
+      img.width = 82;
+      img.height = 82;
+      qrContainer.appendChild(img);
+    }
   }
 }
 
-// Copy link function
+// Show Copy Success Message
+function showCopySuccess() {
+  if (copyFeedback) {
+    copyFeedback.style.display = 'block';
+    setTimeout(() => {
+      copyFeedback.style.display = 'none';
+    }, 3000);
+  }
+}
+
+// Copy link function (Works on both HTTPS and file:// protocols)
 function copyShareLink() {
   const publicUrl = getPublicPassUrl();
-  navigator.clipboard.writeText(publicUrl).then(() => {
-    if (copyFeedback) {
-      copyFeedback.style.display = 'block';
-      setTimeout(() => {
-        copyFeedback.style.display = 'none';
-      }, 3000);
-    }
-  }).catch(err => {
-    // Fallback
+  
+  if (shareableLinkInput) {
+    shareableLinkInput.value = publicUrl;
+    shareableLinkInput.focus();
     shareableLinkInput.select();
-    document.execCommand('copy');
-    alert('Link Copied to Clipboard!');
-  });
+    if (shareableLinkInput.setSelectionRange) {
+      shareableLinkInput.setSelectionRange(0, 99999);
+    }
+  }
+
+  // Try modern navigator.clipboard first
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(publicUrl).then(() => {
+      showCopySuccess();
+    }).catch(() => {
+      fallbackCopy();
+    });
+  } else {
+    fallbackCopy();
+  }
+}
+
+function fallbackCopy() {
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      showCopySuccess();
+    } else {
+      prompt("Copy this link:", shareableLinkInput ? shareableLinkInput.value : getPublicPassUrl());
+    }
+  } catch (err) {
+    prompt("Copy this link:", shareableLinkInput ? shareableLinkInput.value : getPublicPassUrl());
+  }
 }
 
 // Handle Photo File Upload for local preview
@@ -131,7 +187,15 @@ if (inputPhotoFile) {
     if (file) {
       const reader = new FileReader();
       reader.onload = function (event) {
-        dispPhoto.src = event.target.result;
+        if (dispPhoto) {
+          dispPhoto.src = event.target.result;
+        }
+        // Save to localStorage so pass.html on this machine can load it
+        try {
+          localStorage.setItem('local_pass_photo', event.target.result);
+        } catch (e) {
+          console.warn("Photo too large for localStorage");
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -148,8 +212,8 @@ allInputs.forEach(input => {
 
 // Select avatar presets
 function setAvatar(url) {
-  inputPhotoUrl.value = url;
-  dispPhoto.src = url;
+  if (inputPhotoUrl) inputPhotoUrl.value = url;
+  if (dispPhoto) dispPhoto.src = url;
   updatePass();
 }
 

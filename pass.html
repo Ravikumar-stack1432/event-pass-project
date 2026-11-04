@@ -147,6 +147,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      min-width: 82px;
+      min-height: 82px;
     }
 
     .qr-text {
@@ -216,8 +218,8 @@
   <!-- THE PASS CARD -->
   <div class="pass-card">
     <div class="pass-banner">
-      <h1 id="passEvent">EVENT PASS 2026</h1>
-      <span class="pass-tag" id="passRole">VOLUNTEER PASS</span>
+      <h1 id="passEvent">दीपोत्सव 2026, अयोध्या</h1>
+      <span class="pass-tag" id="passRole">स्वयंसेवक</span>
     </div>
 
     <div class="photo-container">
@@ -226,25 +228,25 @@
       </div>
     </div>
 
-    <div class="pass-serial" id="passId">क्र. VOL-2026-001</div>
+    <div class="pass-serial" id="passId">क्र. G09-05739</div>
 
     <div class="pass-body">
       <div class="pass-info">
         <div class="info-row">
-          <span class="info-label">नाम / Name:</span>
-          <span class="info-val" id="passName">Student Name</span>
+          <span class="info-label">नाम:</span>
+          <span class="info-val" id="passName">अंशुमन</span>
         </div>
         <div class="info-row">
-          <span class="info-label">संस्था / Dept:</span>
-          <span class="info-val" id="passDept">Department Name</span>
+          <span class="info-label">संस्था/इकाई:</span>
+          <span class="info-val" id="passDept">Dr Rammanohar Lohia Avadh University</span>
         </div>
         <div class="info-row">
-          <span class="info-label">मोबाइल नं. / Mob:</span>
-          <span class="info-val" id="passMobile">9XXXXXXXXX</span>
+          <span class="info-label">मोबाइल नं.:</span>
+          <span class="info-val" id="passMobile">9161914850</span>
         </div>
         <div class="info-row">
-          <span class="info-label">तैनाती स्थल / Duty:</span>
-          <span class="info-val" id="passDuty">Main Gate Area</span>
+          <span class="info-label">तैनाती स्थल:</span>
+          <span class="info-val" id="passDuty">राम की पैड़ी घाट नं : 9</span>
         </div>
       </div>
 
@@ -255,11 +257,11 @@
     </div>
 
     <div class="pass-footer" id="passEmergency">
-      आपात संपर्क सूत्र : +91 8808160420
+      आपात संपर्क सूत्र : +91 8808160420 / +91 9170838005
     </div>
   </div>
 
-  <!-- Bottom Buttons (Only Print) -->
+  <!-- Bottom Buttons -->
   <div class="bottom-actions">
     <button class="action-btn" onclick="window.print()">🖨️ Print Pass / Save PDF</button>
   </div>
@@ -268,17 +270,17 @@
     // URL se details read karna
     const params = new URLSearchParams(window.location.search);
 
-    const name = params.get('name') || 'Anshuman Kumar';
-    const id = params.get('id') || 'VOL-2026-057';
-    const role = params.get('role') || 'स्वयंसेवक / VOLUNTEER';
-    const dept = params.get('dept') || 'University Campus';
-    const duty = params.get('duty') || 'Gate No. 4';
+    const name = params.get('name') || 'अंशुमन';
+    const id = params.get('id') || 'G09-05739';
+    const role = params.get('role') || 'स्वयंसेवक';
+    const dept = params.get('dept') || 'Dr Rammanohar Lohia Avadh University';
+    const duty = params.get('duty') || 'राम की पैड़ी घाट नं : 9';
     const mob = params.get('mob') || '9161914850';
-    const eventName = params.get('event') || 'ANNUAL EVENT 2026';
-    const emergency = params.get('emg') || '+91 8808160420';
+    const eventName = params.get('event') || 'दीपोत्सव 2026, अयोध्या';
+    const emergency = params.get('emg') || '+91 8808160420 / +91 9170838005';
     const photo = params.get('photo');
 
-    // Display elements populate karna
+    // Populate fields
     document.getElementById('passName').textContent = name;
     document.getElementById('passId').textContent = 'क्र. ' + id;
     document.getElementById('passRole').textContent = role.toUpperCase();
@@ -288,20 +290,45 @@
     document.getElementById('passEvent').textContent = eventName;
     document.getElementById('passEmergency').textContent = 'आपात संपर्क सूत्र : ' + emergency;
 
+    const photoElem = document.getElementById('passPhoto');
     if (photo) {
-      document.getElementById('passPhoto').src = photo;
+      photoElem.src = photo;
+    } else {
+      const localPhoto = localStorage.getItem('local_pass_photo');
+      if (localPhoto) {
+        photoElem.src = localPhoto;
+      }
     }
 
-    // QR Code: Is pass ke current live page ka URL encode karega
+    // QR Code Generation with Fallback
+    const qrTarget = document.getElementById('qr-target');
     const currentPassUrl = window.location.href;
-    new QRCode(document.getElementById('qr-target'), {
-      text: currentPassUrl,
-      width: 82,
-      height: 82,
-      colorDark: "#1e272e",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
-    });
+    try {
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(qrTarget, {
+          text: currentPassUrl,
+          width: 82,
+          height: 82,
+          colorDark: "#1e272e",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L
+        });
+      } else {
+        const img = document.createElement('img');
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=' + encodeURIComponent(currentPassUrl);
+        img.alt = 'QR Code';
+        img.width = 82;
+        img.height = 82;
+        qrTarget.appendChild(img);
+      }
+    } catch (err) {
+      const img = document.createElement('img');
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=82x82&data=' + encodeURIComponent(currentPassUrl);
+      img.alt = 'QR Code';
+      img.width = 82;
+      img.height = 82;
+      qrTarget.appendChild(img);
+    }
   </script>
 </body>
 </html>

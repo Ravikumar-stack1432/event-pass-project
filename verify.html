@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pass Verification Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: #ecf0f1;">
+
+  <div class="verify-container">
+    <div id="statusBox" class="status-badge status-valid">
+      <span id="statusIcon">✅</span>
+      <span id="statusText">VERIFIED & AUTHENTIC</span>
+    </div>
+
+    <h2 id="verifyEvent" style="font-size: 18px; color: #2c3e50; margin-bottom: 5px;">Event Verification</h2>
+    <p style="font-size: 12px; color: #7f8c8d; margin-bottom: 20px;" id="verifyTimestamp"></p>
+
+    <div class="verify-details">
+      <div class="verify-row">
+        <span class="verify-label">Pass ID:</span>
+        <span class="verify-value" id="valId">-</span>
+      </div>
+      <div class="verify-row">
+        <span class="verify-label">Full Name:</span>
+        <span class="verify-value" id="valName">-</span>
+      </div>
+      <div class="verify-row">
+        <span class="verify-label">Role:</span>
+        <span class="verify-value" id="valRole">-</span>
+      </div>
+      <div class="verify-row">
+        <span class="verify-label">Department:</span>
+        <span class="verify-value" id="valDept">-</span>
+      </div>
+      <div class="verify-row">
+        <span class="verify-label">Duty Location:</span>
+        <span class="verify-value" id="valDuty">-</span>
+      </div>
+      <div class="verify-row">
+        <span class="verify-label">Contact:</span>
+        <span class="verify-value" id="valMob">-</span>
+      </div>
+    </div>
+
+    <p style="font-size: 11px; color: #95a5a6; margin-top: 15px;">
+      Official Digital Verification System • For college security checkpoint checks.
+    </p>
+
+    <div style="margin-top: 20px;">
+      <a href="index.html" class="btn btn-secondary" style="display: inline-block; font-size: 12px; padding: 6px 14px;">
+        ← Back to Generator
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const passId = urlParams.get('id');
+    const name = urlParams.get('name');
+    const role = urlParams.get('role');
+    const dept = urlParams.get('dept');
+    const duty = urlParams.get('duty');
+    const mob = urlParams.get('mob');
+    const eventName = urlParams.get('event');
+
+    const statusBox = document.getElementById('statusBox');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusText = document.getElementById('statusText');
+
+    // Display current scan timestamp
+    const now = new Date();
+    document.getElementById('verifyTimestamp').textContent = 'Scanned on: ' + now.toLocaleString('en-IN');
+
+    if (passId && name) {
+      document.getElementById('verifyEvent').textContent = eventName || 'Event Security Portal';
+      document.getElementById('valId').textContent = passId;
+      document.getElementById('valName').textContent = name;
+      document.getElementById('valRole').textContent = role || 'N/A';
+      document.getElementById('valDept').textContent = dept || 'N/A';
+      document.getElementById('valDuty').textContent = duty || 'N/A';
+      document.getElementById('valMob').textContent = mob || 'N/A';
+    } else {
+      statusBox.className = 'status-badge status-invalid';
+      statusIcon.textContent = '❌';
+      statusText.textContent = 'INVALID OR MISSING PASS DATA';
+      document.getElementById('verifyEvent').textContent = 'Verification Failed';
+    }
+  </script>
+</body>
+</html>
+

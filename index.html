@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Pass Generator & QR System</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <header class="project-header">
+      <h1>🎓 Event Pass Generator & QR Verification</h1>
+      <p>College Project: Real-time Digital ID Pass with Dynamic Verification QR</p>
+    </header>
+
+    <div class="workspace">
+      <!-- LEFT: Details Input Form -->
+      <section class="form-panel">
+        <h2>Pass Details (विवरण भरें)</h2>
+
+        <div class="form-group">
+          <label for="inputEvent">Event / Festival Name</label>
+          <input type="text" id="inputEvent" value="Annual Tech Fest 2026">
+        </div>
+
+        <div class="form-group">
+          <label for="inputRole">Role / Designation (दायित्व)</label>
+          <input type="text" id="inputRole" value="Volunteer / स्वयंसेवक">
+        </div>
+
+        <div class="form-group">
+          <label for="inputPassId">Pass ID / Roll No</label>
+          <input type="text" id="inputPassId" value="VOL-2026-084">
+        </div>
+
+        <div class="form-group">
+          <label for="inputName">Full Name (नाम)</label>
+          <input type="text" id="inputName" value="Rahul Kumar">
+        </div>
+
+        <div class="form-group">
+          <label for="inputDept">Institution / Department (संस्था/इकाई)</label>
+          <input type="text" id="inputDept" value="Computer Science & Engg">
+        </div>
+
+        <div class="form-group">
+          <label for="inputMobile">Mobile No (मोबाइल नं.)</label>
+          <input type="text" id="inputMobile" value="9876543210">
+        </div>
+
+        <div class="form-group">
+          <label for="inputDuty">Assigned Location (तैनाती स्थल)</label>
+          <input type="text" id="inputDuty" value="Main Gate - Entry Checkpoint">
+        </div>
+
+        <div class="form-group">
+          <label for="inputEmergency">Emergency Contact (आपातकालीन नंबर)</label>
+          <input type="text" id="inputEmergency" value="+91 8808160420">
+        </div>
+
+        <div class="form-group">
+          <label for="inputPhoto">Upload Photo (फोटो अपलोड करें)</label>
+          <input type="file" id="inputPhoto" accept="image/*">
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="window.print()">🖨️ Print Pass</button>
+          <a id="btnTestVerify" class="btn btn-secondary" target="_blank">🔗 Test QR Link</a>
+        </div>
+      </section>
+
+      <!-- RIGHT: Live ID Pass Preview -->
+      <section class="preview-panel">
+        <h2>Live Preview (पास कार्ड)</h2>
+
+        <div class="id-card" id="printableCard">
+          <div class="card-header">
+            <div class="event-title" id="dispEvent">Annual Tech Fest 2026</div>
+            <div class="card-subtitle" id="dispRole">VOLUNTEER PASS</div>
+          </div>
+
+          <div class="card-photo-wrap">
+            <div class="photo-frame">
+              <img id="dispPhoto" src="https://via.placeholder.com/120x150?text=Photo" alt="Profile Photo">
+            </div>
+          </div>
+
+          <div class="card-id-badge" id="dispPassId">ID: VOL-2026-084</div>
+
+          <div class="card-body">
+            <div class="card-fields">
+              <div class="field-row">
+                <span class="field-label">नाम (Name)</span>
+                <span class="field-value" id="dispName">Rahul Kumar</span>
+              </div>
+              <div class="field-row">
+                <span class="field-label">विभाग (Dept)</span>
+                <span class="field-value" id="dispDept">Computer Science</span>
+              </div>
+              <div class="field-row">
+                <span class="field-label">मोबाइल (Mob)</span>
+                <span class="field-value" id="dispMobile">9876543210</span>
+              </div>
+              <div class="field-row">
+                <span class="field-label">तैनाती स्थल (Duty)</span>
+                <span class="field-value" id="dispDuty">Main Gate</span>
+              </div>
+            </div>
+
+            <div class="card-qr-section">
+              <div id="qrcode-container"></div>
+              <span class="qr-caption">Scan to Verify</span>
+            </div>
+          </div>
+
+          <div class="card-footer" id="dispEmergency">
+            EMERGENCY: +91 8808160420
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

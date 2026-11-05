@@ -230,12 +230,14 @@
       overflow-wrap: anywhere;
     }
 
+    /* SIGNATURE ROW WITH SIDE-BY-SIDE INLINE ALIGNMENT */
     .signature-row {
       position: absolute;
       z-index: 4;
       left: 0;
       bottom: 4.5%;
       width: 100%;
+      height: 38px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       border-top: 2px solid #972626;
@@ -246,10 +248,7 @@
         #fffbbf 50%,
         #e6ab00 100%
       );
-      text-align: center;
       color: #302b20;
-      font-size: clamp(8px, 2.05cqw, 17px);
-      font-weight: 600;
       align-items: center;
     }
 
@@ -257,30 +256,39 @@
       min-width: 0;
       height: 100%;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: center;
       border-right: 1px solid #972626;
-      line-height: 1;
-      padding: 1mm;
+      padding: 1px 4px;
     }
 
     .signature-row > div:last-child {
       border-right: none;
     }
 
-    .signature-row img {
-      display: block;
-      width: auto;
-      max-width: 90%;
-      height: 34px;
-      object-fit: contain;
-      margin: 0 auto 2px;
+    .sig-content {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
     }
 
-    .sign-1 {
-      width: 90px;
-      height: 34px;
+    .sig-text {
+      font-size: clamp(8px, 1.9cqw, 13.5px);
+      font-weight: 700;
+      line-height: 1.15;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .sig-content img {
+      display: block;
+      height: 25px;
+      width: auto;
+      max-width: 55px;
+      object-fit: contain;
     }
 
     .emergency {
@@ -358,24 +366,24 @@
       <div class="line"><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
     </section>
 
-    <div class="signature-row pt-2">
+    <!-- SIGNATURE ROW WITH INLINE SIDE-BY-SIDE IMAGES -->
+    <div class="signature-row">
       <div>
-        <span class="d-inline-flex flex-column align-items-center">
-          प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई
-          <div class="sign-1"></div>
-        </span>
+        <div class="sig-content">
+          <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
+        </div>
       </div>
       <div>
-        <span class="d-inline-flex flex-column align-items-center">
-          नोडल अधिकारी
+        <div class="sig-content">
+          <span class="sig-text">नोडल अधिकारी</span>
           <img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर">
-        </span>
+        </div>
       </div>
       <div>
-        <span class="d-inline-flex flex-column align-items-center">
-          प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन
+        <div class="sig-content">
+          <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
           <img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर">
-        </span>
+        </div>
       </div>
     </div>
 

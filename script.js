@@ -31,7 +31,7 @@ const savedPassesTableBody = document.getElementById('savedPassesTableBody');
 // Debounce timer for QR code
 let qrDebounceTimer = null;
 
-// Free Permanent Image Host API Key
+// Free Permanent Image Host API Key (Freeimage.host / iili.io)
 const FREEIMAGE_API_KEY = "6d207e02198a847aa98d0a2a901485a5";
 
 // Default Avatar
@@ -49,7 +49,7 @@ function getPublicPassUrl() {
 
   const passPage = baseUrl + 'pass.html';
 
-  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
@@ -69,7 +69,7 @@ function getPublicPassUrl() {
   }
 
   const photoUrl = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
-  if (photoUrl && !photoUrl.startsWith('data:image')) {
+  if (photoUrl && photoUrl !== 'profile.jpg' && !photoUrl.startsWith('data:image') && !photoUrl.includes('tmpfiles.org')) {
     params.set('photo', photoUrl);
   }
 
@@ -78,7 +78,7 @@ function getPublicPassUrl() {
 
 // Update the live preview card and debounced QR code
 function updatePass() {
-  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
@@ -94,7 +94,15 @@ function updatePass() {
   if (dispDept) dispDept.textContent = deptVal;
 
   if (dispPhoto) {
-    dispPhoto.src = photoVal || 'profile.jpg';
+    dispPhoto.onerror = function() {
+      if (this.src !== 'profile.jpg') this.src = 'profile.jpg';
+    };
+
+    if (photoVal && !photoVal.includes('tmpfiles.org')) {
+      dispPhoto.src = photoVal;
+    } else {
+      dispPhoto.src = DEFAULT_AVATAR;
+    }
   }
 
   const publicUrl = getPublicPassUrl();
@@ -132,7 +140,7 @@ async function uploadImageFile(file) {
   localReader.onload = function(evt) {
     const base64Local = evt.target.result;
     if (dispPhoto) dispPhoto.src = base64Local;
-    const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
+    const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
     try {
       localStorage.setItem('pass_photo_' + passId, base64Local);
     } catch (e) {}
@@ -153,30 +161,74 @@ async function uploadImageFile(file) {
     });
 
     const data = await res.json();
-    if (data && data.image && data.image.url) {
-      const permanentCdnUrl = data.image.url;
 
-      if (inputPhotoUrl) inputPhotoUrl.value = permanentCdnUrl;
-      if (dispPhoto) dispPhoto.src = permanentCdnUrl;
+    if (data && data.image && data.image.url) {
+      const permanentUrl = data.image.url;
+      if (inputPhotoUrl) inputPhotoUrl.value = permanentUrl;
+      if (dispPhoto) dispPhoto.src = permanentUrl;
+
+      const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+      localStorage.setItem('pass_photo_' + passId, permanentUrl);
 
       if (uploadStatus) {
-        uploadStatus.innerHTML = '✅ Photo permanent cloud par save ho gayi! Mobile scanner par 100% dikhegi.';
+        uploadStatus.innerHTML = '✅ Photo cloud par save ho gayi! Mobile QR scan par direct show hogi.';
         uploadStatus.style.color = '#16a34a';
       }
 
       updatePass();
-    } else {
-      throw new Error('Upload returned invalid payload');
+      return;
     }
   } catch (err) {
-    console.warn('Primary cloud upload failed, using fallback:', err);
-    // Keep local preview
-    if (uploadStatus) {
-      uploadStatus.innerHTML = '✓ Photo local preview me load ho gayi hai.';
-      uploadStatus.style.color = '#0284c7';
-    }
-    updatePass();
+    console.warn("Direct upload error:", err);
   }
+
+  // Fallback: Upload as base64 string via secondary API endpoint
+  try {
+    const base64 = await fileToBase64(file);
+    const cleanBase64 = base64.replace(/^data:image\/[a-z]+;base64,/, '');
+
+    const form = new URLSearchParams();
+    form.append('key', FREEIMAGE_API_KEY);
+    form.append('action', 'upload');
+    form.append('source', cleanBase64);
+    form.append('format', 'json');
+
+    const res = await fetch('https://freeimage.host/api/1/upload', {
+      method: 'POST',
+      body: form
+    });
+    const data = await res.json();
+    if (data && data.image && data.image.url) {
+      const permanentUrl = data.image.url;
+      if (inputPhotoUrl) inputPhotoUrl.value = permanentUrl;
+      if (dispPhoto) dispPhoto.src = permanentUrl;
+
+      if (uploadStatus) {
+        uploadStatus.innerHTML = '✅ Photo cloud par save ho gayi! Mobile QR scan par direct show hogi.';
+        uploadStatus.style.color = '#16a34a';
+      }
+      updatePass();
+      return;
+    }
+  } catch (err2) {
+    console.warn("Base64 upload error:", err2);
+  }
+
+  // If both cloud uploads fail, keep local preview and inform user
+  if (uploadStatus) {
+    uploadStatus.innerHTML = '⚠️ Local preview set ho gayi hai. Link me default photo display hoga.';
+    uploadStatus.style.color = '#2563eb';
+  }
+  updatePass();
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 // Photo file input handler
@@ -195,7 +247,7 @@ function setAvatar(url) {
   if (dispPhoto) dispPhoto.src = url;
   if (uploadStatus) uploadStatus.style.display = 'none';
 
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   localStorage.setItem('pass_photo_' + passId, url);
   updatePass();
 }
@@ -226,22 +278,30 @@ function restoreFormState() {
       if (inputMobile && data.mob) inputMobile.value = data.mob;
       if (inputDept && data.dept) inputDept.value = data.dept;
       if (inputDuty && data.duty) inputDuty.value = data.duty;
-      if (inputPhotoUrl && data.photo && !data.photo.includes('tmpfiles.org')) {
-        inputPhotoUrl.value = data.photo;
+
+      // Clean up legacy expired tmpfiles.org URLs
+      if (inputPhotoUrl) {
+        if (data.photo && !data.photo.includes('tmpfiles.org') && !data.photo.includes('undefined')) {
+          inputPhotoUrl.value = data.photo;
+        } else {
+          inputPhotoUrl.value = DEFAULT_AVATAR;
+        }
       }
     } catch (e) {}
+  } else {
+    if (inputPhotoUrl) inputPhotoUrl.value = DEFAULT_AVATAR;
   }
 }
 
 // Save Pass Record to Database
 function savePassRecord() {
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
   const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
   const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
-  const photoVal = (inputPhotoUrl ? inputPhotoUrl.value.trim() : '') || '';
+  const photoVal = (inputPhotoUrl ? inputPhotoUrl.value.trim() : '') || DEFAULT_AVATAR;
 
   const record = {
     id: passId,
@@ -315,7 +375,7 @@ function loadPassToForm(idx) {
       if (inputDuty) inputDuty.value = item.duty;
       if (inputMobile) inputMobile.value = item.mob;
       if (inputDept) inputDept.value = item.dept || '';
-      if (inputPhotoUrl) inputPhotoUrl.value = item.photo || '';
+      if (inputPhotoUrl) inputPhotoUrl.value = item.photo || DEFAULT_AVATAR;
       updatePass();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

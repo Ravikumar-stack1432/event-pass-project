@@ -8,10 +8,10 @@
   <style>
     :root {
       --primary: #9c1511;
-      --secondary: #2c3e50;
-      --accent: #d35400;
-      --bg: #f1f5f9;
-      --text: #1e293b;
+      --secondary: #1e293b;
+      --accent: #d97706;
+      --bg: #f8fafc;
+      --text: #0f172a;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,26 +21,27 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
-      padding: 20px 10px;
+      padding: 24px 12px;
     }
 
     .main-wrap {
-      max-width: 1050px;
+      max-width: 1120px;
       margin: 0 auto;
     }
 
     .page-title {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
 
     .page-title h1 {
-      font-size: 22px;
+      font-size: 24px;
       color: var(--primary);
+      font-weight: 800;
     }
 
     .page-title p {
-      font-size: 13px;
+      font-size: 13.5px;
       color: #64748b;
       margin-top: 4px;
     }
@@ -48,27 +49,31 @@
     .flex-layout {
       display: flex;
       flex-wrap: wrap;
-      gap: 25px;
+      gap: 30px;
       justify-content: center;
       align-items: flex-start;
     }
 
     /* LEFT: ADMIN FORM */
     .admin-card {
-      flex: 1 1 420px;
+      flex: 1 1 440px;
       max-width: 500px;
       background: white;
       border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
     }
 
     .admin-card h2 {
-      font-size: 16px;
-      margin-bottom: 15px;
+      font-size: 17px;
+      margin-bottom: 16px;
       color: var(--secondary);
       border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 8px;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .grid-row {
@@ -78,7 +83,7 @@
     }
 
     .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 13px;
     }
 
     .form-group label {
@@ -91,11 +96,12 @@
 
     .form-group input {
       width: 100%;
-      padding: 8px 12px;
+      padding: 9px 12px;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
       font-size: 13.5px;
       outline: none;
+      transition: border-color 0.2s;
     }
 
     .form-group input:focus {
@@ -105,19 +111,25 @@
     /* Avatar Quick Pick */
     .avatar-picker {
       display: flex;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 10px;
+      margin-top: 8px;
     }
 
     .avatar-btn {
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: 2px solid #cbd5e1;
       overflow: hidden;
       cursor: pointer;
       padding: 0;
       background: none;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .avatar-btn:hover {
+      transform: scale(1.08);
+      border-color: var(--primary);
     }
 
     .avatar-btn img {
@@ -126,17 +138,13 @@
       object-fit: cover;
     }
 
-    .avatar-btn:hover {
-      border-color: var(--primary);
-    }
-
     /* SHARE LINK BOX */
     .share-box {
       background: #fefce8;
       border: 1.5px dashed #eab308;
       border-radius: 8px;
       padding: 14px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
     .share-box label {
@@ -188,8 +196,8 @@
     .action-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 15px;
+      gap: 10px;
+      margin-top: 16px;
     }
 
     .btn-action {
@@ -215,59 +223,63 @@
 
     /* RIGHT: PREVIEW WRAPPER */
     .preview-wrap {
-      flex: 0 0 380px;
+      flex: 0 0 512px;
+      max-width: 512px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     .preview-header {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 800;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       color: var(--secondary);
     }
 
-    /* THE EXACT PASS CARD */
-    .pass-card {
+    /* THE EXACT IDENTITY CARD PASS (100% MATCHING pass.html) */
+    .pass-container {
       width: 100%;
-      max-width: 400px;
-      background: linear-gradient(180deg, #f7df8b 0%, #fae69e 25%, #fbf0b5 65%, #f7df8b 100%);
-      border: 3px solid #d4a034;
-      border-radius: 8px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
+      max-width: 512px;
+      background: #f7df8b;
+      background: linear-gradient(180deg, #f7df89 0%, #fae69e 20%, #fbf0b5 60%, #f6dc82 100%);
+      border: 3.5px solid #c98e1f;
+      border-radius: 6px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.22);
       position: relative;
+      overflow: hidden;
+      color: #000000;
     }
 
+    /* TOP LOGOS HEADER */
     .top-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 14px 4px;
+      padding: 16px 20px 8px;
     }
 
     .univ-logo-wrap {
-      width: 62px;
-      height: 62px;
-      background: white;
+      width: 82px;
+      height: 82px;
+      background: #ffffff;
       border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 2.5px solid #b81d18;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
       overflow: hidden;
-      border: 2px solid #eab308;
     }
 
     .univ-logo-wrap img {
-      width: 90%;
-      height: 90%;
+      width: 95%;
+      height: 95%;
       object-fit: contain;
     }
 
     .event-logo-wrap {
-      width: 120px;
+      width: 155px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -279,75 +291,87 @@
       object-fit: contain;
     }
 
+    /* UNIVERSITY & EVENT TITLE */
     .title-section {
       text-align: center;
-      padding: 4px 10px 4px;
+      padding: 2px 14px 6px;
     }
 
     .univ-name {
-      font-size: 15px;
+      font-size: 19px;
       font-weight: 800;
-      color: #9c1511;
-      letter-spacing: 0.3px;
-      line-height: 1.3;
+      color: #b81d18;
+      letter-spacing: 0.2px;
+      line-height: 1.35;
     }
 
     .event-title {
-      font-size: 15px;
+      font-size: 19px;
       font-weight: 800;
-      color: #881337;
-      margin-top: 2px;
+      color: #b81d18;
+      margin-top: 3px;
     }
 
+    /* RIBBON & HAZARD STRIPES */
     .ribbon-wrap {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 6px 0 10px;
+      margin: 10px 0 16px;
+      height: 28px;
     }
 
-    .hazard-stripe {
+    .hazard-stripe-left,
+    .hazard-stripe-right {
       position: absolute;
-      width: 100%;
-      height: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 16px;
+      width: 50%;
       background: repeating-linear-gradient(
         -45deg,
         #b81d18,
-        #b81d18 8px,
-        #f5c518 8px,
-        #f5c518 16px
+        #b81d18 9px,
+        #f5c518 9px,
+        #f5c518 18px
       );
       z-index: 1;
     }
 
+    .hazard-stripe-left { left: 0; }
+    .hazard-stripe-right { right: 0; }
+
     .badge-ribbon {
       position: relative;
       z-index: 2;
-      background: #c98e1f;
+      background: linear-gradient(180deg, #c78824 0%, #aa6e17 100%);
       color: #ffffff;
-      font-size: 12.5px;
+      font-size: 15px;
       font-weight: 800;
-      padding: 3px 28px;
-      clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 100%, 0% 100%);
+      padding: 5px 36px;
+      letter-spacing: 0.5px;
+      clip-path: polygon(0% 0%, 100% 0%, calc(100% - 16px) 100%, 16px 100%);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
+    /* PHOTO & QR SECTION */
     .center-section {
       display: flex;
       align-items: center;
-      justify-content: space-around;
-      padding: 0 14px 6px;
-      gap: 10px;
+      justify-content: center;
+      padding: 0 20px 10px;
+      position: relative;
     }
 
     .photo-frame {
-      width: 120px;
-      height: 150px;
-      border: 3px solid #b8860b;
-      border-radius: 4px;
+      width: 148px;
+      height: 185px;
+      border: 3.5px solid #855b14;
+      background: #cbd5e1;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
       overflow: hidden;
-      background: #e2e8f0;
-      flex-shrink: 0;
+      margin-left: 15px;
     }
 
     .photo-frame img {
@@ -358,85 +382,85 @@
     }
 
     .qr-column {
+      position: absolute;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex: 1;
     }
 
     .serial-box {
-      font-size: 13.5px;
+      font-size: 15.5px;
       font-weight: 800;
-      color: #111;
-      margin-bottom: 5px;
+      color: #000000;
+      margin-bottom: 8px;
       letter-spacing: 0.5px;
       text-align: center;
     }
 
     .qr-white-box {
       background: #ffffff;
-      padding: 6px;
-      border: 1.5px solid #222;
-      border-radius: 6px;
+      padding: 5px;
+      border: 2px solid #000000;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     }
 
     .qr-white-box img {
       display: block;
-      width: 105px !important;
-      height: 105px !important;
+      width: 104px !important;
+      height: 104px !important;
     }
 
+    /* DETAILS TABLE */
     .details-table {
-      padding: 8px 18px 10px;
-      font-size: 13px;
-      color: #111;
+      padding: 16px 20px 14px 75px;
+      font-size: 16px;
+      color: #000000;
     }
 
     .table-row {
       display: flex;
-      margin-bottom: 5px;
-      line-height: 1.3;
+      margin-bottom: 9px;
+      line-height: 1.4;
     }
 
     .col-label {
-      width: 95px;
+      width: 135px;
       font-weight: 800;
-      color: #1a1a1a;
+      color: #000000;
       flex-shrink: 0;
-    }
-
-    .col-colon {
-      width: 14px;
-      font-weight: 800;
     }
 
     .col-val {
       flex: 1;
-      font-weight: 700;
-      color: #000;
+      font-weight: 500;
+      color: #000000;
     }
 
+    /* SIGNATURE BLOCKS */
     .sign-row {
       display: flex;
-      border-top: 1.5px solid #d4a034;
-      border-bottom: 1.5px solid #d4a034;
-      background: rgba(255, 255, 255, 0.45);
-      font-size: 9.5px;
+      border-top: 2px solid #855b14;
+      border-bottom: 2px solid #855b14;
+      background: rgba(255, 235, 160, 0.65);
+      font-size: 11px;
       font-weight: 800;
-      color: #1e293b;
+      color: #000000;
       text-align: center;
-      min-height: 42px;
+      min-height: 55px;
+      margin-top: 10px;
     }
 
     .sign-col {
       flex: 1;
-      border-right: 1.5px solid #d4a034;
-      padding: 4px 3px;
+      border-right: 2px solid #855b14;
+      padding: 6px 4px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -448,38 +472,41 @@
     }
 
     .sign-placeholder {
-      font-size: 8.5px;
+      font-size: 9.5px;
       color: #64748b;
       font-weight: 600;
-      margin-top: 10px;
+      margin-top: 18px;
       border-top: 1px dotted #94a3b8;
       width: 75%;
       padding-top: 2px;
     }
 
+    /* EMERGENCY FOOTER STRIP */
     .emergency-bar {
-      background: #9c1511;
+      background: #b81d18;
       color: #ffffff;
       text-align: center;
-      padding: 6px 4px;
-      font-size: 11px;
+      padding: 9px 6px;
+      font-size: 13.5px;
       font-weight: 800;
+      letter-spacing: 0.3px;
     }
 
-    /* Saved Records Table */
+    /* SAVED PASSES DATABASE */
     .saved-records-card {
-      margin-top: 25px;
+      margin-top: 30px;
       background: white;
       border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     th {
@@ -499,7 +526,21 @@
     @media print {
       body { background: white; padding: 0; }
       .admin-card, .page-title, .preview-header, .action-row, .saved-records-card { display: none !important; }
-      .pass-card { margin: 0 auto; box-shadow: none; }
+      .pass-container { margin: 0 auto; box-shadow: none; border: 2px solid #855b14; }
+    }
+
+    @media (max-width: 540px) {
+      .preview-wrap { flex: 0 0 100%; max-width: 100%; }
+      .pass-container { max-width: 100%; border-radius: 0; border-width: 2px; }
+      .univ-name, .event-title { font-size: 16px; }
+      .univ-logo-wrap { width: 68px; height: 68px; }
+      .event-logo-wrap { width: 125px; }
+      .photo-frame { width: 125px; height: 160px; margin-left: 5px; }
+      .qr-white-box img { width: 92px !important; height: 92px !important; }
+      .serial-box { font-size: 13.5px; }
+      .details-table { padding: 12px 14px 10px 35px; font-size: 14.5px; }
+      .col-label { width: 110px; }
+      .emergency-bar { font-size: 11.5px; padding: 7px 4px; }
     }
   </style>
 </head>
@@ -514,7 +555,7 @@
     <div class="flex-layout">
       <!-- LEFT FORM -->
       <section class="admin-card">
-        <h2>Pass Details (विवरण दर्ज करें)</h2>
+        <h2>📝 Pass Details (विवरण दर्ज करें)</h2>
 
         <div class="grid-row">
           <div class="form-group">
@@ -553,17 +594,17 @@
           <label>Photo URL (फोटो लिंक या नीचे से चुनें)</label>
           <input type="text" id="inputPhotoUrl" value="profile.jpg">
           <div class="avatar-picker">
-            <button type="button" class="avatar-btn" style="border: 2px solid #9c1511;" title="Uploaded Avatar" onclick="setAvatar('profile.jpg')">
-              <img src="profile.jpg" alt="Uploaded Avatar">
+            <button type="button" class="avatar-btn" style="border: 2px solid var(--primary);" title="Default Avatar" onclick="setAvatar('profile.jpg')">
+              <img src="profile.jpg" alt="Default Avatar">
             </button>
-            <button type="button" class="avatar-btn" title="Avatar 1" onclick="setAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80')">
+            <button type="button" class="avatar-btn" title="CDN Avatar" onclick="setAvatar('https://iili.io/nQokGxp.jpg')">
+              <img src="https://iili.io/nQokGxp.jpg" alt="CDN Avatar">
+            </button>
+            <button type="button" class="avatar-btn" title="Photo 1" onclick="setAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80')">
               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80" alt="Avatar 1">
             </button>
-            <button type="button" class="avatar-btn" title="Avatar 2" onclick="setAvatar('https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=240&auto=format&fit=crop&q=80')">
+            <button type="button" class="avatar-btn" title="Photo 2" onclick="setAvatar('https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=240&auto=format&fit=crop&q=80')">
               <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=80" alt="Avatar 2">
-            </button>
-            <button type="button" class="avatar-btn" title="Avatar 3" onclick="setAvatar('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=240&auto=format&fit=crop&q=80')">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80" alt="Avatar 3">
             </button>
           </div>
         </div>
@@ -596,7 +637,8 @@
       <section class="preview-wrap">
         <div class="preview-header">Live Card Preview (पास कार्ड)</div>
 
-        <div class="pass-card" id="printableCard">
+        <!-- THE DIGITAL PASS CARD -->
+        <div class="pass-container" id="printableCard">
           <!-- TOP LOGOS -->
           <div class="top-header">
             <div class="univ-logo-wrap">
@@ -613,15 +655,17 @@
             <div class="event-title">दीपोत्सव 2026, अयोध्या</div>
           </div>
 
-          <!-- HAZARD STRIPE RIBBON -->
+          <!-- RIBBON & HAZARD STRIPES -->
           <div class="ribbon-wrap">
-            <div class="hazard-stripe"></div>
+            <div class="hazard-stripe-left"></div>
             <div class="badge-ribbon">परिचय पत्र</div>
+            <div class="hazard-stripe-right"></div>
           </div>
 
+          <!-- PHOTO & QR -->
           <div class="center-section">
             <div class="photo-frame">
-              <img id="dispPhoto" src="profile.jpg" alt="Pass Photo" onerror="this.src='profile.jpg'">
+              <img id="dispPhoto" src="profile.jpg" alt="Pass Photo" onerror="if(this.src!=='profile.jpg')this.src='profile.jpg'">
             </div>
 
             <div class="qr-column">
@@ -632,39 +676,35 @@
             </div>
           </div>
 
+          <!-- DETAILS TABLE -->
           <div class="details-table">
             <div class="table-row">
-              <span class="col-label">नाम</span>
-              <span class="col-colon">:</span>
+              <span class="col-label">नाम:</span>
               <span class="col-val" id="dispName">अंशुमन</span>
             </div>
 
             <div class="table-row">
-              <span class="col-label">संस्था/इकाई</span>
-              <span class="col-colon">:</span>
+              <span class="col-label">संस्था/इकाई:</span>
               <span class="col-val" id="dispDept">Dr Rammanohar Lohia Awadh University Ayodhya</span>
             </div>
 
             <div class="table-row">
-              <span class="col-label">मोबाइल नं.</span>
-              <span class="col-colon">:</span>
+              <span class="col-label">मोबाइल नं.:</span>
               <span class="col-val" id="dispMob">9161914850</span>
             </div>
 
             <div class="table-row">
-              <span class="col-label">तैनाती स्थल</span>
-              <span class="col-colon">:</span>
+              <span class="col-label">तैनाती स्थल:</span>
               <span class="col-val" id="dispDuty">राम की पैड़ी घाट नं : 9</span>
             </div>
 
             <div class="table-row">
-              <span class="col-label">दायित्व</span>
-              <span class="col-colon">:</span>
+              <span class="col-label">दायित्व:</span>
               <span class="col-val" id="dispRole">स्वयंसेवक</span>
             </div>
           </div>
 
-          <!-- OFFICIAL SIGNATURE BLOCKS -->
+          <!-- SIGNATURE BLOCKS -->
           <div class="sign-row">
             <div class="sign-col">
               <span>प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
@@ -680,6 +720,7 @@
             </div>
           </div>
 
+          <!-- EMERGENCY FOOTER STRIP -->
           <div class="emergency-bar">
             आपात संपर्क सूत्र - +91 8808160420 / +91 9170838005
           </div>

@@ -332,7 +332,7 @@
       width: 100%;
       max-width: 530px;
       height: auto;
-      aspect-ratio: 72 / 95;
+      aspect-ratio: 210 / 297;
       margin: 0 auto;
       padding: 0;
       background-color: #ffffce;
@@ -665,31 +665,29 @@
       }
       .main-wrap, .flex-layout, .preview-wrap {
         margin: 0 !important;
-        padding: 20mm !important;
+        padding: 0 !important;
         width: 210mm !important;
         height: 297mm !important;
         max-width: 210mm !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
+        display: block !important;
         box-shadow: none !important;
       }
       .sheet {
-        width: 7.2cm !important;
-        height: 9.5cm !important;
-        max-width: 7.2cm !important;
-        max-height: 9.5cm !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        max-width: 100% !important;
+        aspect-ratio: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
         box-shadow: none !important;
-        border: 1px dashed #94a3b8 !important; /* Scissor cut line */
-        margin: 0 auto !important;
+        overflow: hidden !important;
         page-break-after: avoid !important;
         break-after: avoid !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
       .fine-border {
-        inset: 1mm !important;
+        inset: 1.5mm !important;
       }
     }
 
@@ -817,7 +815,7 @@
 
       <!-- RIGHT PREVIEW -->
       <section class="preview-wrap">
-        <div class="preview-header">Live Card Preview (A4 Badge: 7.2cm × 9.5cm)</div>
+        <div class="preview-header">Live Card Preview (पास कार्ड)</div>
 
         <!-- THE EXACT OFFICIAL PASS CARD -->
         <main class="sheet container-fluid p-0" aria-label="दीपोत्सव 2026 परिचय पत्र" id="printableCard">

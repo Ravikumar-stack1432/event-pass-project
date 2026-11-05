@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "^/Department/Print_Data(.*)",
+      "dest": "/Department/Print_Data.html$1"
+    },
+    {
+      "src": "^/admin(.*)",
+      "dest": "/admin.html$1"
+    },
+    {
+      "src": "^/pass(.*)",
+      "dest": "/pass.html$1"
+    },
+    {
+      "src": "^/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

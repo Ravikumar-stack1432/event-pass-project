@@ -394,39 +394,76 @@
   <script>
     const params = new URLSearchParams(window.location.search);
 
-    // Support both ID=MzI3ODY= (official format) and id=G09-05739
     let id = params.get('id') || params.get('ID') || 'G09-05739';
-    if (id === 'MzI3ODY=') id = 'G09-05739';
+    let name = params.get('n') || params.get('name');
+    let dept = params.get('dept');
+    let mob = params.get('m') || params.get('mob');
+    let duty = params.get('d') || params.get('duty');
+    let role = params.get('r') || params.get('role');
+    let photo = params.get('photo');
 
-    const name = params.get('n') || params.get('name') || 'अंशुमन';
-    const dept = params.get('dept') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
-    const mob = params.get('m') || params.get('mob') || '9161914850';
-    const duty = params.get('d') || params.get('duty') || 'राम की पैड़ी घाट नं : 9';
-    const role = params.get('r') || params.get('role') || 'स्वयंसेवक';
-    const photo = params.get('photo');
+    function applyPassData(pId, pName, pDept, pMob, pDuty, pRole, pPhoto) {
+      document.getElementById('dispSerial').textContent = pId.startsWith('क्र.') ? pId : ('क्र.' + pId);
+      document.getElementById('dispName').textContent = pName || 'अंशुमन';
+      document.getElementById('dispDept').textContent = pDept || 'Dr Rammanohar Lohia Awadh University Ayodhya';
+      document.getElementById('dispMob').textContent = pMob || '9161914850';
+      document.getElementById('dispDuty').textContent = pDuty || 'राम की पैड़ी घाट नं : 9';
+      document.getElementById('dispRole').textContent = pRole || 'स्वयंसेवक';
 
-    document.getElementById('dispSerial').textContent = id.startsWith('क्र.') ? id : ('क्र.' + id);
-    document.getElementById('dispName').textContent = name;
-    document.getElementById('dispDept').textContent = dept;
-    document.getElementById('dispMob').textContent = mob;
-    document.getElementById('dispDuty').textContent = duty;
-    document.getElementById('dispRole').textContent = role;
+      const photoElem = document.getElementById('dispPhoto');
+      photoElem.onerror = function() {
+        this.src = "profile.jpg";
+      };
 
-    const photoElem = document.getElementById('dispPhoto');
-    photoElem.onerror = function() {
-      this.src = "profile.jpg";
-    };
+      if (pPhoto && pPhoto !== 'profile.jpg' && !pPhoto.includes('tmpfiles.org')) {
+        photoElem.src = pPhoto;
+      } else {
+        photoElem.src = "profile.jpg";
+      }
 
-    if (photo && photo !== 'profile.jpg' && !photo.includes('tmpfiles.org')) {
-      photoElem.src = photo;
-    } else {
-      photoElem.src = "profile.jpg";
+      const currentPassUrl = window.location.href;
+      const qrImg = document.getElementById('qrImage');
+      const fastQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
+      qrImg.src = fastQrUrl;
     }
 
-    const currentPassUrl = window.location.href;
-    const qrImg = document.getElementById('qrImage');
-    const fastQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
-    qrImg.src = fastQrUrl;
+    async function initPass() {
+      // 1. Initial render from URL params if present
+      applyPassData(id, name, dept, mob, duty, role, photo);
+
+      // 2. If short link (missing details), lookup in localStorage or passes.json
+      if (!name || !photo || id === 'MzI3ODY=' || id === 'G09-05873') {
+        let registry = {};
+        try {
+          const res = await fetch('passes.json');
+          if (res.ok) registry = await res.json();
+        } catch(e) {
+          try {
+            const res2 = await fetch('../passes.json');
+            if (res2.ok) registry = await res2.json();
+          } catch(e2) {}
+        }
+
+        // Also check local storage
+        try {
+          const saved = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+          saved.forEach(p => { if (p.id) registry[p.id] = p; });
+        } catch(e) {}
+
+        const matched = registry[id];
+        if (matched) {
+          name = name || matched.name;
+          dept = dept || matched.dept;
+          mob = mob || matched.mob;
+          duty = duty || matched.duty;
+          role = role || matched.role;
+          photo = photo || matched.photo;
+          applyPassData(id, name, dept, mob, duty, role, photo);
+        }
+      }
+    }
+
+    initPass();
   </script>
 </body>
 </html>

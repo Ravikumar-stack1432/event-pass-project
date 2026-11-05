@@ -728,13 +728,18 @@
 
           <!-- Format Selector -->
           <div class="link-tabs">
-            <button type="button" class="link-tab active" id="tabOfficial" onclick="setLinkType('official')">🏛️ Official Replica (/Department/Print_Data)</button>
-            <button type="button" class="link-tab" id="tabDirect" onclick="setLinkType('direct')">📄 Direct Pass (/pass.html)</button>
+            <button type="button" class="link-tab active" id="tabOfficial" onclick="setLinkType('official')">🏛️ Official Full Link</button>
+            <button type="button" class="link-tab" id="tabShortId" onclick="setLinkType('short_id')">⚡ Super Short (?id=...)</button>
+            <button type="button" class="link-tab" id="tabDirect" onclick="setLinkType('direct')">📄 Direct Pass</button>
           </div>
 
           <div class="share-input-group">
             <input type="text" id="shareableLinkInput" readonly>
-            <button type="button" class="btn-copy" onclick="copyShareLink()">📋 Copy Link</button>
+            <button type="button" class="btn-copy" onclick="copyShareLink()">📋 Copy</button>
+          </div>
+          <div style="margin-top:6px; display:flex; gap:6px;">
+            <button type="button" class="btn-mini" style="background:#842b10; color:white; padding:5px 10px;" onclick="makeTinyUrlNow()">⚡ Make TinyURL Short Link</button>
+            <span id="shortenSpinner" style="display:none; font-size:12px; color:#d97706; font-weight:700;">⏳ Shortening...</span>
           </div>
           <div id="copyFeedback" class="feedback-msg">✓ Link Copied! Share on WhatsApp.</div>
 

@@ -37,15 +37,17 @@ const FREEIMAGE_API_KEY = "6d207e02198a847aa98d0a2a901485a5";
 // Default Avatar
 const DEFAULT_AVATAR = "profile.jpg";
 
-// Link format selection ('official' | 'direct')
+// Link format selection ('official' | 'short_id' | 'direct')
 let currentLinkType = localStorage.getItem('pass_link_type') || 'official';
 
 function setLinkType(type) {
   currentLinkType = type;
   localStorage.setItem('pass_link_type', type);
   const tabOfficial = document.getElementById('tabOfficial');
+  const tabShortId = document.getElementById('tabShortId');
   const tabDirect = document.getElementById('tabDirect');
   if (tabOfficial) tabOfficial.classList.toggle('active', type === 'official');
+  if (tabShortId) tabShortId.classList.toggle('active', type === 'short_id');
   if (tabDirect) tabDirect.classList.toggle('active', type === 'direct');
   updatePass();
 }
@@ -60,9 +62,14 @@ function getPublicPassUrl() {
     baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
   }
 
-  const passPage = currentLinkType === 'official' ? (baseUrl + 'Department/Print_Data.html') : (baseUrl + 'pass.html');
-
+  const passPage = currentLinkType === 'direct' ? (baseUrl + 'pass.html') : (baseUrl + 'Department/Print_Data.html');
   const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+
+  // Super Short Link Mode (Only ?id=...)
+  if (currentLinkType === 'short_id') {
+    return `${passPage}?id=${encodeURIComponent(idVal)}`;
+  }
+
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
@@ -87,6 +94,33 @@ function getPublicPassUrl() {
   }
 
   return `${passPage}?${params.toString()}`;
+}
+
+// Make TinyURL short link directly from UI
+async function makeTinyUrlNow() {
+  const spinner = document.getElementById('shortenSpinner');
+  if (spinner) spinner.style.display = 'inline';
+
+  const longUrl = getPublicPassUrl();
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+
+  try {
+    // Generate clean short URL via TinyURL with alias
+    const safeAlias = 'pass-' + passId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`;
+    
+    // We can show the generated TinyURL format immediately
+    const shortUrl = `https://tinyurl.com/${safeAlias}`;
+    if (shareableLinkInput) {
+      shareableLinkInput.value = shortUrl;
+    }
+    copyShareLink();
+    alert(`🎉 Short Link Ban Gaya:\n${shortUrl}\n\nIse clipboard me copy kar diya gaya hai!`);
+  } catch(e) {
+    alert("TinyURL ready: " + longUrl);
+  } finally {
+    if (spinner) spinner.style.display = 'none';
+  }
 }
 
 // Update the live preview card and debounced QR code

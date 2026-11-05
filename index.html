@@ -186,12 +186,13 @@
 
     .action-row {
       display: flex;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-top: 15px;
     }
 
     .btn-action {
-      flex: 1;
+      flex: 1 1 45%;
       padding: 10px;
       border-radius: 6px;
       text-align: center;
@@ -401,9 +402,39 @@
       font-weight: 700;
     }
 
+    /* Saved Records Table */
+    .saved-records-card {
+      margin-top: 25px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      text-align: left;
+      color: #475569;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
     @media print {
       body { background: white; padding: 0; }
-      .admin-card, .page-title, .preview-header, .action-row { display: none !important; }
+      .admin-card, .page-title, .preview-header, .action-row, .saved-records-card { display: none !important; }
       .pass-card { margin: 0 auto; box-shadow: none; }
     }
   </style>
@@ -413,7 +444,7 @@
   <div class="main-wrap">
     <header class="page-title">
       <h1>🛠️ Pass Management Admin Portal</h1>
-      <p>Fill details → Live preview updates → Copy & Share link or scan QR code!</p>
+      <p>Fill details → Live preview updates → Save & Share with direct photo display!</p>
     </header>
 
     <div class="flex-layout">
@@ -471,8 +502,9 @@
         </div>
 
         <div class="form-group">
-          <label for="inputPhotoFile">Or Upload from PC (या कंप्यूटर से फोटो चुनें)</label>
+          <label for="inputPhotoFile">Upload Photo from PC / Phone (फोटो अपलोड करें)</label>
           <input type="file" id="inputPhotoFile" accept="image/*">
+          <div id="uploadStatus" style="display:none; font-size:12px; margin-top:5px; font-weight:700;"></div>
         </div>
 
         <!-- SHAREABLE LINK BOX -->
@@ -486,8 +518,9 @@
         </div>
 
         <div class="action-row">
+          <button type="button" class="btn-action" style="background:#16a34a; color:white;" onclick="savePassRecord()">💾 Save Pass</button>
           <a id="btnOpenPass" class="btn-action btn-primary" target="_blank">👁️ Open Pass</a>
-          <a href="scanner.html" class="btn-action" style="background: #0284c7; color: white;" target="_blank">📷 Open Scanner</a>
+          <a href="scanner.html" class="btn-action" style="background: #0284c7; color: white;" target="_blank">📷 QR Scanner</a>
           <button type="button" class="btn-action btn-secondary" onclick="window.print()">🖨️ Print</button>
         </div>
       </section>
@@ -561,6 +594,27 @@
           </div>
         </div>
       </section>
+    </div>
+
+    <!-- SAVED RECORDS DATABASE TABLE -->
+    <div class="saved-records-card">
+      <h2 style="font-size:16px; margin-bottom:6px; color:var(--secondary);">📋 Saved Passes (सभी सुरक्षित किए गए पास)</h2>
+      <p style="font-size:12px; color:#64748b; margin-bottom:12px;">Admin dwara create kiye gaye sabhi pass yahan save rehte hain:</p>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pass ID</th>
+              <th>नाम (Name)</th>
+              <th>दायित्व (Role)</th>
+              <th>तैनाती स्थल</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="savedPassesTableBody">
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

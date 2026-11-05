@@ -2,35 +2,39 @@
 const LIVE_BASE_URL = "https://ravikumar-stack1432.github.io/event-pass-project/";
 
 // Form Elements
-const inputEvent = document.getElementById('inputEvent');
-const inputRole = document.getElementById('inputRole');
 const inputPassId = document.getElementById('inputPassId');
+const inputRole = document.getElementById('inputRole');
 const inputName = document.getElementById('inputName');
-const inputDept = document.getElementById('inputDept');
 const inputMobile = document.getElementById('inputMobile');
+const inputDept = document.getElementById('inputDept');
 const inputDuty = document.getElementById('inputDuty');
 const inputPhotoUrl = document.getElementById('inputPhotoUrl');
 const inputPhotoFile = document.getElementById('inputPhotoFile');
 const uploadStatus = document.getElementById('uploadStatus');
 
-// Preview Elements
-const dispEvent = document.getElementById('dispEvent');
-const dispRole = document.getElementById('dispRole');
+// Preview Display Elements
 const dispSerial = document.getElementById('dispSerial');
 const dispName = document.getElementById('dispName');
-const dispDept = document.getElementById('dispDept');
-const dispMob = document.getElementById('dispMob');
+const dispRole = document.getElementById('dispRole');
 const dispDuty = document.getElementById('dispDuty');
+const dispMob = document.getElementById('dispMob');
+const dispDept = document.getElementById('dispDept');
 const dispPhoto = document.getElementById('dispPhoto');
 const qrImage = document.getElementById('qrImage');
 
-// Share input & buttons
+// Share & Actions
 const shareableLinkInput = document.getElementById('shareableLinkInput');
 const btnOpenPass = document.getElementById('btnOpenPass');
 const copyFeedback = document.getElementById('copyFeedback');
 const savedPassesTableBody = document.getElementById('savedPassesTableBody');
 
-// Function to generate clean, short, instant-scannable Pass URL
+// Debounce timer for QR generation to prevent API throttling
+let qrDebounceTimer = null;
+
+// Default Photo
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80";
+
+// Function to construct the public pass URL
 function getPublicPassUrl() {
   let baseUrl;
   if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -61,16 +65,16 @@ function getPublicPassUrl() {
     params.set('dept', deptVal);
   }
 
-  // Include photo URL
+  // Check if a cloud photo URL is set
   const photoUrl = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
-  if (photoUrl) {
+  if (photoUrl && !photoUrl.startsWith('data:image')) {
     params.set('photo', photoUrl);
   }
 
   return `${passPage}?${params.toString()}`;
 }
 
-// Update Card Preview & QR Code
+// Update the live preview card and the debounced QR code
 function updatePass() {
   const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
@@ -91,7 +95,7 @@ function updatePass() {
     dispPhoto.src = photoVal;
   }
 
-  // Update public URL
+  // Update public share link
   const publicUrl = getPublicPassUrl();
   if (shareableLinkInput) {
     shareableLinkInput.value = publicUrl;
@@ -100,106 +104,268 @@ function updatePass() {
     btnOpenPass.href = publicUrl;
   }
 
-  // Generate High-Definition Crisp QR Code
-  if (qrImage) {
-    const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(publicUrl);
-    qrImage.src = qrApiUrl;
-  }
+  // Debounced QR code update (Wait 300ms after user stops typing)
+  clearTimeout(qrDebounceTimer);
+  qrDebounceTimer = setTimeout(() => {
+    generateQrCode(publicUrl);
+  }, 300);
 
-  // Auto-save form fields to localStorage
-  saveCurrentFormToStorage();
+  // Auto-save form fields
+  saveFormState();
 }
 
-// Upload Image to Free Cloud Hosting automatically
-async function uploadImageFile(file) {
-  if (!file) return;
+// Generate QR Code with fallback
+function generateQrCode(url) {
+  if (!qrImage) return;
+  // High quality QR from api.qrserver
+  const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(url);
+  qrImage.src = qrApiUrl;
+}
 
-  if (uploadStatus) {
-    uploadStatus.style.display = 'block';
-    uploadStatus.innerHTML = '⏳ Photo cloud par upload ho rahi hai... kripya 2 second wait karein.';
-    uploadStatus.style.color = '#d97706';
-  }
+// Photo file upload handler
+if (inputPhotoFile) {
+  inputPhotoFile.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  // Show immediate local preview
-  const localReader = new FileReader();
-  localReader.onload = (e) => {
-    if (dispPhoto) dispPhoto.src = e.target.result;
-  };
-  localReader.readAsDataURL(file);
+    if (uploadStatus) {
+      uploadStatus.style.display = 'block';
+      uploadStatus.innerHTML = '⏳ Photo process ho rahi hai... kripya rukhein.';
+      uploadStatus.style.color = '#d97706';
+    }
 
-  try {
+    // Step 1: Immediately read local file and show in preview
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const base64Data = evt.target.result;
+      if (dispPhoto) dispPhoto.src = base64Data;
+
+      // Save to localStorage for this specific pass ID
+      const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+      try {
+        localStorage.setItem('pass_photo_' + passId, base64Data);
+        localStorage.setItem('latest_uploaded_photo', base64Data);
+      } catch (err) {
+        console.warn('localStorage full:', err);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    // Step 2: Upload to Cloud so Mobile Phones can also see it
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('https://tmpfiles.org/api/v1/upload', {
+    fetch('https://tmpfiles.org/api/v1/upload', {
       method: 'POST',
       body: formData
-    });
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.status === 'success' && data.data && data.data.url) {
+        // Convert to direct download/render link
+        const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+        if (inputPhotoUrl) inputPhotoUrl.value = directUrl;
+        if (dispPhoto) dispPhoto.src = directUrl;
 
-    const result = await response.json();
-    if (result && result.status === 'success' && result.data && result.data.url) {
-      // Direct download/display URL replaces tmpfiles.org/ with tmpfiles.org/dl/
-      const directUrl = result.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-      if (inputPhotoUrl) {
-        inputPhotoUrl.value = directUrl;
-      }
-      if (dispPhoto) {
-        dispPhoto.src = directUrl;
-      }
+        if (uploadStatus) {
+          uploadStatus.innerHTML = '✅ Photo cloud par save ho gayi! Mobile par bhi show hogi.';
+          uploadStatus.style.color = '#16a34a';
+        }
 
+        updatePass();
+      } else {
+        throw new Error('Upload returned invalid response');
+      }
+    })
+    .catch(err => {
+      console.warn('Cloud upload issue:', err);
       if (uploadStatus) {
-        uploadStatus.innerHTML = '✅ Photo successfully upload ho gayi! Ab mobile par bhi show hogi.';
-        uploadStatus.style.color = '#16a34a';
+        uploadStatus.innerHTML = '✓ Photo locally save ho gayi hai. Cloud link ke liye photo URL direct paste bhi kar sakte hain.';
+        uploadStatus.style.color = '#0284c7';
       }
-
-      // Refresh pass link & QR
       updatePass();
-    } else {
-      throw new Error('Upload response failed');
-    }
-  } catch (error) {
-    console.error('Image upload failed:', error);
-    if (uploadStatus) {
-      uploadStatus.innerHTML = '⚠️ Cloud upload me samay lag raha hai. Aap photo URL direct paste bhi kar sakte hain.';
-      uploadStatus.style.color = '#dc2626';
-    }
+    });
+  });
+}
+
+// Select Avatar Preset
+function setAvatar(url) {
+  if (inputPhotoUrl) inputPhotoUrl.value = url;
+  if (dispPhoto) dispPhoto.src = url;
+  if (uploadStatus) uploadStatus.style.display = 'none';
+
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  localStorage.setItem('pass_photo_' + passId, url);
+  updatePass();
+}
+
+// Save Current Form State
+function saveFormState() {
+  const data = {
+    id: inputPassId ? inputPassId.value : '',
+    role: inputRole ? inputRole.value : '',
+    name: inputName ? inputName.value : '',
+    mob: inputMobile ? inputMobile.value : '',
+    dept: inputDept ? inputDept.value : '',
+    duty: inputDuty ? inputDuty.value : '',
+    photo: inputPhotoUrl ? inputPhotoUrl.value : ''
+  };
+  localStorage.setItem('admin_form_state', JSON.stringify(data));
+}
+
+// Restore Form State
+function restoreFormState() {
+  const saved = localStorage.getItem('admin_form_state');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (inputPassId && data.id) inputPassId.value = data.id;
+      if (inputRole && data.role) inputRole.value = data.role;
+      if (inputName && data.name) inputName.value = data.name;
+      if (inputMobile && data.mob) inputMobile.value = data.mob;
+      if (inputDept && data.dept) inputDept.value = data.dept;
+      if (inputDuty && data.duty) inputDuty.value = data.duty;
+      if (inputPhotoUrl && data.photo) inputPhotoUrl.value = data.photo;
+    } catch (e) {}
   }
 }
 
-// Copy Shareable Link to Clipboard
+// Save Pass Record to Database
+function savePassRecord() {
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
+  const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
+  const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
+  const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
+  const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
+  const photoVal = (inputPhotoUrl ? inputPhotoUrl.value.trim() : '') || '';
+
+  const record = {
+    id: passId,
+    name: nameVal,
+    role: roleVal,
+    duty: dutyVal,
+    mob: mobVal,
+    dept: deptVal,
+    photo: photoVal,
+    link: getPublicPassUrl(),
+    savedAt: new Date().toLocaleTimeString('en-IN')
+  };
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+  } catch (e) { list = []; }
+
+  const existingIdx = list.findIndex(item => item.id === passId);
+  if (existingIdx >= 0) {
+    list[existingIdx] = record;
+  } else {
+    list.unshift(record);
+  }
+
+  localStorage.setItem('all_saved_passes', JSON.stringify(list));
+  renderSavedPassesTable();
+
+  // Also auto-copy link
+  copyShareLink();
+  alert(`✅ Pass [${passId} - ${nameVal}] successfully save ho gaya aur link copy ho gaya!`);
+}
+
+// Render Saved Passes Table
+function renderSavedPassesTable() {
+  if (!savedPassesTableBody) return;
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+  } catch (e) { list = []; }
+
+  if (list.length === 0) {
+    savedPassesTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:14px;">Abhi koi pass save nahi hai. Form bhar kar "💾 Save & Generate Pass" click karein.</td></tr>`;
+    return;
+  }
+
+  savedPassesTableBody.innerHTML = list.map((item, idx) => `
+    <tr>
+      <td><strong>${item.id}</strong></td>
+      <td>${item.name}</td>
+      <td>${item.role}</td>
+      <td>${item.duty}</td>
+      <td style="white-space:nowrap;">
+        <button onclick="loadPassToForm(${idx})" style="background:#0284c7; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700;">✏️ Edit</button>
+        <a href="${item.link}" target="_blank" style="background:#2563eb; color:white; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700; margin-left:4px;">👁️ View</a>
+        <button onclick="copySpecificLink('${item.link}')" style="background:#16a34a; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:4px;">📋 Copy</button>
+        <button onclick="deletePassRecord(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:4px;">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// Load a saved pass back into the form
+function loadPassToForm(idx) {
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+    const item = list[idx];
+    if (item) {
+      if (inputPassId) inputPassId.value = item.id;
+      if (inputName) inputName.value = item.name;
+      if (inputRole) inputRole.value = item.role;
+      if (inputDuty) inputDuty.value = item.duty;
+      if (inputMobile) inputMobile.value = item.mob;
+      if (inputDept) inputDept.value = item.dept || '';
+      if (inputPhotoUrl) inputPhotoUrl.value = item.photo || '';
+      updatePass();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  } catch (e) {}
+}
+
+function copySpecificLink(link) {
+  navigator.clipboard.writeText(link).then(() => {
+    alert("Pass Link Copied to Clipboard!");
+  }).catch(() => {
+    prompt("Copy this link:", link);
+  });
+}
+
+function deletePassRecord(idx) {
+  if (!confirm("Kya aap sach me is pass ko delete karna chahte hain?")) return;
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+    list.splice(idx, 1);
+    localStorage.setItem('all_saved_passes', JSON.stringify(list));
+    renderSavedPassesTable();
+  } catch (e) {}
+}
+
+// Copy link function
 function copyShareLink() {
   const publicUrl = getPublicPassUrl();
-  
   if (shareableLinkInput) {
     shareableLinkInput.value = publicUrl;
     shareableLinkInput.focus();
     shareableLinkInput.select();
-    if (shareableLinkInput.setSelectionRange) {
-      shareableLinkInput.setSelectionRange(0, 99999);
-    }
   }
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(publicUrl).then(() => {
       showCopyToast();
     }).catch(() => {
-      fallbackCopy();
+      fallbackCopy(publicUrl);
     });
   } else {
-    fallbackCopy();
+    fallbackCopy(publicUrl);
   }
 }
 
-function fallbackCopy() {
+function fallbackCopy(url) {
   try {
-    const success = document.execCommand('copy');
-    if (success) {
-      showCopyToast();
-    } else {
-      prompt("Copy this pass link:", shareableLinkInput ? shareableLinkInput.value : getPublicPassUrl());
-    }
+    document.execCommand('copy');
+    showCopyToast();
   } catch (e) {
-    prompt("Copy this pass link:", shareableLinkInput ? shareableLinkInput.value : getPublicPassUrl());
+    prompt("Copy this pass link:", url);
   }
 }
 
@@ -212,140 +378,17 @@ function showCopyToast() {
   }
 }
 
-// Local Photo File Input Handler
-if (inputPhotoFile) {
-  inputPhotoFile.addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      uploadImageFile(file);
-    }
-  });
-}
-
-// Avatar Presets
-function setAvatar(url) {
-  if (inputPhotoUrl) inputPhotoUrl.value = url;
-  if (dispPhoto) dispPhoto.src = url;
-  if (uploadStatus) uploadStatus.style.display = 'none';
-  updatePass();
-}
-
-// Save Current Form to Local Storage (Auto Persistence)
-function saveCurrentFormToStorage() {
-  const data = {
-    id: inputPassId ? inputPassId.value : '',
-    name: inputName ? inputName.value : '',
-    role: inputRole ? inputRole.value : '',
-    dept: inputDept ? inputDept.value : '',
-    mob: inputMobile ? inputMobile.value : '',
-    duty: inputDuty ? inputDuty.value : '',
-    photo: inputPhotoUrl ? inputPhotoUrl.value : ''
-  };
-  localStorage.setItem('current_editing_pass', JSON.stringify(data));
-}
-
-// Restore Last Edited Pass on Page Load
-function restoreFormFromStorage() {
-  const saved = localStorage.getItem('current_editing_pass');
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      if (inputPassId && data.id) inputPassId.value = data.id;
-      if (inputName && data.name) inputName.value = data.name;
-      if (inputRole && data.role) inputRole.value = data.role;
-      if (inputDept && data.dept) inputDept.value = data.dept;
-      if (inputMobile && data.mob) inputMobile.value = data.mob;
-      if (inputDuty && data.duty) inputDuty.value = data.duty;
-      if (inputPhotoUrl && data.photo) inputPhotoUrl.value = data.photo;
-    } catch (e) {}
-  }
-}
-
-// Save Pass into Pass Records List
-function savePassRecord() {
-  const record = {
-    id: (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739',
-    name: (inputName ? inputName.value.trim() : '') || 'अंशुमन',
-    role: (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक',
-    duty: (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9',
-    mob: (inputMobile ? inputMobile.value.trim() : '') || '9161914850',
-    photo: (inputPhotoUrl ? inputPhotoUrl.value.trim() : '') || '',
-    link: getPublicPassUrl(),
-    createdAt: new Date().toLocaleTimeString('en-IN')
-  };
-
-  let list = [];
-  try {
-    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
-  } catch (e) { list = []; }
-
-  // Check if ID already exists, update or add
-  const existingIndex = list.findIndex(item => item.id === record.id);
-  if (existingIndex >= 0) {
-    list[existingIndex] = record;
-  } else {
-    list.unshift(record);
-  }
-
-  localStorage.setItem('all_saved_passes', JSON.stringify(list));
-  renderSavedPassesTable();
-  alert(`✅ Pass [${record.id} - ${record.name}] successfully save ho gaya!`);
-}
-
-// Render Saved Passes Table in Admin Panel
-function renderSavedPassesTable() {
-  if (!savedPassesTableBody) return;
-  let list = [];
-  try {
-    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
-  } catch (e) { list = []; }
-
-  if (list.length === 0) {
-    savedPassesTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:12px;">Abhi koi pass save nahi kiya gaya hai. "💾 Save Pass to Database" par click karein.</td></tr>`;
-    return;
-  }
-
-  savedPassesTableBody.innerHTML = list.map((item, idx) => `
-    <tr>
-      <td><strong>${item.id}</strong></td>
-      <td>${item.name}</td>
-      <td>${item.role}</td>
-      <td>${item.duty}</td>
-      <td style="white-space:nowrap;">
-        <a href="${item.link}" target="_blank" style="color:#0284c7; text-decoration:none; font-weight:700; margin-right:8px;">👁️ Open</a>
-        <button onclick="copySpecificLink('${item.link}')" style="background:#16a34a; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer; font-size:11px;">📋 Copy</button>
-        <button onclick="deletePassRecord(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer; font-size:11px; margin-left:4px;">🗑️</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function copySpecificLink(link) {
-  navigator.clipboard.writeText(link).then(() => {
-    alert("Link Copied!");
-  });
-}
-
-function deletePassRecord(index) {
-  let list = [];
-  try {
-    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
-    list.splice(index, 1);
-    localStorage.setItem('all_saved_passes', JSON.stringify(list));
-    renderSavedPassesTable();
-  } catch (e) {}
-}
-
 // Attach input listeners
-const allInputs = [inputEvent, inputRole, inputPassId, inputName, inputDept, inputMobile, inputDuty, inputPhotoUrl];
-allInputs.forEach(inp => {
+const allInputFields = [inputPassId, inputRole, inputName, inputMobile, inputDept, inputDuty, inputPhotoUrl];
+allInputFields.forEach(inp => {
   if (inp) {
     inp.addEventListener('input', updatePass);
   }
 });
 
+// Initialize on DOM ready
 window.addEventListener('DOMContentLoaded', () => {
-  restoreFormFromStorage();
+  restoreFormState();
   updatePass();
   renderSavedPassesTable();
 });

@@ -323,7 +323,7 @@
     if (photo) {
       photoElem.src = photo;
     } else {
-      const savedPhoto = localStorage.getItem('local_pass_photo');
+      const savedPhoto = localStorage.getItem('pass_photo_' + id) || localStorage.getItem('latest_uploaded_photo') || localStorage.getItem('local_pass_photo');
       if (savedPhoto) {
         photoElem.src = savedPhoto;
       }

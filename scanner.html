@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QR Code Scanner | प्रवेश पत्र स्कैनर</title>
+  <!-- HTML5 QR Code Scanner Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 15px;
+    }
+
+    .scanner-box {
+      width: 100%;
+      max-width: 440px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 20px;
+      color: #38bdf8;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 18px;
+    }
+
+    #reader {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #020617;
+      margin-bottom: 16px;
+      border: 2px solid #38bdf8;
+    }
+
+    /* Result Card */
+    #scanResult {
+      display: none;
+      background: #064e3b;
+      border: 1.5px solid #10b981;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 14px;
+      text-align: left;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-badge {
+      display: inline-block;
+      background: #10b981;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .result-url {
+      font-size: 12px;
+      color: #e2e8f0;
+      word-break: break-all;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+
+    .btn-open {
+      display: block;
+      width: 100%;
+      background: #38bdf8;
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 11px;
+      border-radius: 8px;
+      text-align: center;
+      transition: background 0.2s;
+    }
+
+    .btn-open:hover {
+      background: #7dd3fc;
+    }
+
+    /* File upload section */
+    .file-section {
+      margin-top: 18px;
+      padding-top: 15px;
+      border-top: 1px dashed #475569;
+    }
+
+    .file-section p {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-btn {
+      display: inline-block;
+      background: #334155;
+      color: #f1f5f9;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #475569;
+      transition: background 0.2s;
+    }
+
+    .file-btn:hover {
+      background: #475569;
+    }
+
+    .nav-links {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .nav-link {
+      color: #94a3b8;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scanner-box">
+    <h1>📷 QR Code Scanner</h1>
+    <p class="subtitle">पास का QR कोड स्कैन करें या इमेज अपलोड करें</p>
+
+    <!-- LIVE CAMERA SCANNER VIEWPORT -->
+    <div id="reader"></div>
+
+    <!-- SCAN RESULT SECTION -->
+    <div id="scanResult">
+      <span class="result-badge">✅ Pass Verified</span>
+      <p style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">डिजिटल परिचय पत्र मिला:</p>
+      <div class="result-url" id="resultUrl"></div>
+      <a id="btnGoToPass" class="btn-open" href="#" target="_self">🎟️ Open Pass / पास देखें</a>
+    </div>
+
+    <!-- GALLERY UPLOAD FALLBACK -->
+    <div class="file-section">
+      <p>या फोन गैलरी / स्क्रीनशॉट से QR सेलेक्ट करें:</p>
+      <label for="qrFileInput" class="file-btn">📁 Choose QR Image</label>
+      <input type="file" id="qrFileInput" accept="image/*">
+    </div>
+
+    <div class="nav-links">
+      <a href="admin.html" class="nav-link">← Go to Admin Panel</a>
+      <a href="pass.html" class="nav-link">View Default Pass →</a>
+    </div>
+  </div>
+
+  <script>
+    const scanResultBox = document.getElementById('scanResult');
+    const resultUrlElem = document.getElementById('resultUrl');
+    const btnGoToPass = document.getElementById('btnGoToPass');
+    const qrFileInput = document.getElementById('qrFileInput');
+
+    let html5QrCode = null;
+
+    // Success Handler when QR is detected
+    function onScanSuccess(decodedText, decodedResult) {
+      console.log(`Scan result: ${decodedText}`);
+
+      // Play short beep if supported
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch (e) {}
+
+      // Display result
+      scanResultBox.style.display = 'block';
+      resultUrlElem.textContent = decodedText;
+      btnGoToPass.href = decodedText;
+
+      // Auto redirect if it's a pass URL
+      if (decodedText.includes('pass.html') || decodedText.startsWith('http')) {
+        btnGoToPass.textContent = '🎟️ Opening Pass... / पास खुल रहा है';
+        setTimeout(() => {
+          window.location.href = decodedText;
+        }, 1200);
+      }
+    }
+
+    function onScanFailure(error) {
+      // Quietly ignore frame decode misses while scanning
+    }
+
+    // Start Live Camera Scanner
+    window.addEventListener('DOMContentLoaded', () => {
+      const html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        {
+          fps: 15,
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.0,
+          showTorchButtonIfSupported: true,
+          showZoomSliderIfSupported: true
+        },
+        /* verbose= */ false
+      );
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+      // Handle Image File Upload
+      html5QrCode = new Html5Qrcode("reader");
+      qrFileInput.addEventListener('change', e => {
+        if (e.target.files.length === 0) return;
+        const imageFile = e.target.files[0];
+        html5QrCode.scanFile(imageFile, true)
+          .then(decodedText => {
+            onScanSuccess(decodedText, null);
+          })
+          .catch(err => {
+            alert("इस फोटो में कोई QR कोड नहीं मिला। कृपया स्पष्ट फोटो चुनें।");
+          });
+      });
+    });
+  </script>
+</body>
+</html>

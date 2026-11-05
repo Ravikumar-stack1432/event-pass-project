@@ -74,11 +74,10 @@
 
     .sheet {
       position: relative;
-      width: min(210mm, 100%);
-      max-width: 530px;
-      aspect-ratio: 210 / 297;
-      margin: 0 auto;
-      padding: 0;
+      width: 7.2cm !important;
+      height: 9.5cm !important;
+      max-width: 7.2cm;
+      max-height: 9.5cm;
       background-color: #ffffce;
       background-image: linear-gradient(
         to right,
@@ -86,11 +85,11 @@
         #fffbbf,
         #e6ab0075
       );
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
       overflow: hidden;
       container-type: inline-size;
-      page-break-after: always;
-      break-after: page;
+      border: 1px dashed #94a3b8;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      margin: 15px auto;
     }
 
     .top-panel {
@@ -336,9 +335,30 @@
     }
 
     @media print {
+      body {
+        background: white !important;
+        padding: 0 !important;
+      }
       .top-controls {
         display: none !important;
       }
+      .print-container {
+        padding: 20mm !important;
+        gap: 0 !important;
+      }
+      .sheet {
+        width: 7.2cm !important;
+        height: 9.5cm !important;
+        max-width: 7.2cm !important;
+        margin: 0 auto !important;
+        box-shadow: none !important;
+        border: 1px dashed #94a3b8 !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
       body {
         background: white !important;
         padding: 0 !important;
@@ -348,15 +368,24 @@
         gap: 0 !important;
       }
       .sheet {
-        width: 210mm !important;
-        height: 297mm !important;
-        max-width: 100% !important;
-        aspect-ratio: auto !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        page-break-after: always !important;
-        break-after: page !important;
-      }
+      position: relative;
+      width: 7.2cm !important;
+      height: 9.5cm !important;
+      max-width: 7.2cm;
+      max-height: 9.5cm;
+      background-color: #ffffce;
+      background-image: linear-gradient(
+        to right,
+        #e6ab0075,
+        #fffbbf,
+        #e6ab0075
+      );
+      overflow: hidden;
+      container-type: inline-size;
+      border: 1px dashed #94a3b8;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      margin: 15px auto;
+    }
     }
   </style>
 </head>

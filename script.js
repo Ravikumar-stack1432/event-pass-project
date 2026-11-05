@@ -336,9 +336,9 @@ function restoreFormState() {
       if (inputDept && data.dept) inputDept.value = data.dept;
       if (inputDuty && data.duty) inputDuty.value = data.duty;
 
-      // Clean up legacy expired tmpfiles.org URLs
+      // Clean up legacy expired tmpfiles.org URLs and cartoon avatar URLs
       if (inputPhotoUrl) {
-        if (data.photo && !data.photo.includes('tmpfiles.org') && !data.photo.includes('undefined')) {
+        if (data.photo && !data.photo.includes('tmpfiles.org') && !data.photo.includes('nQokGxp.jpg') && !data.photo.includes('undefined')) {
           inputPhotoUrl.value = data.photo;
         } else {
           inputPhotoUrl.value = DEFAULT_AVATAR;

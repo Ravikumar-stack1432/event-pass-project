@@ -74,3 +74,5 @@ Agar aapko is project ko college me full viva/submission ke liye next level par 
 3. Ab aapka link ban jayega: `https://your-username.github.io/event-pass-project/`
 4. Is live link ke baad aap apne mobile phone ke real camera se paper par print kiye hue pass ko scan karke real-world testing kar sakte hain!
 
+
+<!-- deployed at 11/05/2026 20:47:05 -->

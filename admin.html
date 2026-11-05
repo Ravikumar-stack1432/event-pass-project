@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="hi">
 <head>
   <meta charset="utf-8">
@@ -9,6 +9,640 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
+    :root {
+      --primary: #842b10;
+      --secondary: #1e293b;
+      --bg: #f1f5f9;
+      --text: #0f172a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hind', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px 12px;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    .main-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .page-title h1 {
+      font-size: 26px;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .page-title p {
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .flex-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* LEFT: ADMIN FORM */
+    .admin-card {
+      flex: 1 1 450px;
+      max-width: 520px;
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    .admin-card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: var(--secondary);
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .grid-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 13px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Avatar Quick Pick */
+    .avatar-picker {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .avatar-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      overflow: hidden;
+      cursor: pointer;
+      padding: 0;
+      background: none;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .avatar-btn:hover {
+      transform: scale(1.08);
+      border-color: var(--primary);
+    }
+
+    .avatar-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* SHARE LINK BOX */
+    .share-box {
+      background: #fefce8;
+      border: 1.5px dashed #eab308;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 18px;
+    }
+
+    .share-box label {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #854d0e;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* LINK TYPE SELECTOR */
+    .link-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .link-tab {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .link-tab.active {
+      background: #854d0e;
+      color: white;
+      border-color: #854d0e;
+    }
+
+    .link-tab:hover:not(.active) {
+      background: #f1f5f9;
+    }
+
+    .quick-links-group {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .quick-link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      font-size: 11.5px;
+    }
+
+    .quick-link-item a {
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 250px;
+    }
+
+    .btn-mini {
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      background: #e2e8f0;
+      color: #334155;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .btn-mini:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-wa {
+      background: #25d366;
+      color: white;
+    }
+
+    .btn-wa:hover {
+      background: #1eb956;
+      color: white;
+    }
+
+    .share-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .share-input-group input {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .btn-copy {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover {
+      background: #15803d;
+    }
+
+    .feedback-msg {
+      display: none;
+      font-size: 12px;
+      color: #16a34a;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn-action {
+      flex: 1 1 45%;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: #611e0b; color: white; }
+    .btn-secondary { background: #e2e8f0; color: #1e293b; }
+    .btn-secondary:hover { background: #cbd5e1; }
+
+    /* RIGHT: PREVIEW WRAPPER */
+    .preview-wrap {
+      flex: 0 0 530px;
+      max-width: 530px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-header {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--secondary);
+    }
+
+    /* THE EXACT IDENTITY CARD PASS (ZERO DIFFERENCE FROM OFFICIAL PASS) */
+    .sheet {
+      position: relative;
+      width: 100%;
+      max-width: 530px;
+      height: auto;
+      aspect-ratio: 72 / 95;
+      margin: 0 auto;
+      padding: 0;
+      background-color: #ffffce;
+      background-image: linear-gradient(
+        to right,
+        #e6ab0075,
+        #fffbbf,
+        #e6ab0075
+      );
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      container-type: inline-size;
+    }
+
+    .top-panel {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 31.5%;
+      background: radial-gradient(
+        circle at top center,
+        #fffbbf 0%,
+        #ffcc00 50%,
+        #e6ab00 100%
+      );
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 67%,
+        50% 100%,
+        0 67%
+      );
+      z-index: 1;
+    }
+
+    .top-panel::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40%;
+      background: repeating-linear-gradient(
+        55deg,
+        #a42624 0 2.2mm,
+        #f2c64c 2.2mm 4.4mm
+      );
+      clip-path: polygon(
+        0 0,
+        50% 100%,
+        100% 0,
+        100% 24%,
+        50% 100%,
+        0 24%
+      );
+    }
+
+    .seal {
+      position: absolute;
+      z-index: 3;
+      left: 8.7%;
+      top: 2.2%;
+      width: 17%;
+      height: 10.7%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .event-logo {
+      position: absolute;
+      z-index: 3;
+      right: 5%;
+      top: 1.2%;
+      width: 36%;
+      height: 13%;
+      object-fit: contain;
+    }
+
+    .university {
+      position: absolute;
+      z-index: 3;
+      left: 4%;
+      top: 14.3%;
+      width: 92%;
+      text-align: center;
+      color: #8e2025;
+      font-size: clamp(12px, 4.3cqw, 36px);
+      font-weight: 800;
+      line-height: 1.4;
+      text-shadow: 0 1px 0 #f3d76b;
+    }
+
+    .card-title {
+      position: absolute;
+      z-index: 3;
+      top: 22.2%;
+      left: 25%;
+      width: 50%;
+      text-align: center;
+      font-weight: 700;
+      color: #f5e8b5;
+      font-size: clamp(12px, 3.8cqw, 32px);
+      text-shadow: 0 1px 1px #76632c;
+      clip-path: polygon(
+        0% 0%,
+        100% 0%,
+        80% 100%,
+        20% 100%
+      );
+      background: #a38243b3;
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
+    }
+
+    .portrait-frame {
+      position: absolute;
+      z-index: 4;
+      left: 34.5%;
+      top: 26.8%;
+      width: 31%;
+      height: 23.4%;
+      padding: 1mm;
+      background: #b99a3e;
+      border: 1mm solid #e2ca76;
+    }
+
+    .portrait-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .badge-number {
+      position: absolute;
+      z-index: 4;
+      top: 31.5%;
+      right: 3%;
+      width: 30%;
+      font-size: clamp(10px, 3.3cqw, 28px);
+      font-weight: 700;
+      color: #2d2922;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .qr {
+      position: absolute;
+      z-index: 4;
+      top: 35.3%;
+      right: 7%;
+      width: 19.5%;
+      height: 13.8%;
+      padding: 1mm;
+      background: #fff;
+      border: 1.2mm solid #b89b43;
+      object-fit: contain;
+    }
+
+    .details {
+      position: absolute;
+      z-index: 4;
+      top: 53.4%;
+      left: 20%;
+      width: 82%;
+      color: #29251e;
+      font-size: clamp(10px, 3.35cqw, 28px);
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .details .line {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5em;
+      margin: 0.35% 0;
+    }
+
+    .details .label {
+      flex: 0 0 27%;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .details .value {
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* SIGNATURE ROW */
+    .signature-row {
+      position: absolute;
+      z-index: 4;
+      left: 0;
+      bottom: 4.5%;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 2px solid #972626;
+      border-bottom: 1px solid #a68c3d;
+      background: linear-gradient(
+        180deg,
+        #ffcc00 0%,
+        #fffbbf 50%,
+        #e6ab00 100%
+      );
+      text-align: center;
+      color: #302b20;
+      font-size: clamp(8px, 2.05cqw, 17px);
+      font-weight: 600;
+      align-items: center;
+    }
+
+    .signature-row > div {
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      border-right: 1px solid #972626;
+      line-height: 1;
+      padding: 1mm;
+    }
+
+    
+
+    .signature-row img {
+      display: block;
+      width: auto;
+      max-width: 90%;
+      height: 36px;
+      object-fit: contain;
+      margin: 0 auto 2px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .signature-row img {
+        height: 20px !important;
+      }
+      .sign-1 {
+        width: 50px !important;
+        height: 20.8px !important;
+      }
+    }
+
+    .emergency {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4.5%;
+      background: #be2730;
+      color: #fff3dc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 500;
+      font-size: clamp(9px, 3.3cqw, 28px);
+      white-space: nowrap;
+      padding: 0 1%;
+    }
+      font-weight: 500;
+      font-size: clamp(9px, 3.3cqw, 28px);
+      white-space: nowrap;
+      padding: 0 1%;
+    }
+
+    .fine-border {
+      position: absolute;
+      inset: 1.5mm;
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    /* SAVED PASSES DATABASE */
+    .saved-records-card {
+      margin-top: 30px;
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin-top: 12px;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      text-align: left;
+      color: #475569;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
     
     @page {
       size: A4 portrait;
@@ -16,8 +650,7 @@
     }
 
     @media print {
-      html,
-      body {
+      html, body {
         width: 210mm !important;
         height: 297mm !important;
         margin: 0 !important;
@@ -27,10 +660,10 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-
-      .main-wrap,
-      .flex-layout,
-      .preview-wrap {
+      .admin-card, .page-title, .preview-header, .action-row, .saved-records-card {
+        display: none !important;
+      }
+      .main-wrap, .flex-layout, .preview-wrap {
         margin: 0 !important;
         padding: 20mm !important;
         width: 210mm !important;
@@ -40,20 +673,13 @@
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
+        box-shadow: none !important;
       }
-
-      .admin-card,
-      .page-title,
-      .preview-header,
-      .action-row,
-      .saved-records-card {
-        display: none !important;
-      }
-
       .sheet {
         width: 7.2cm !important;
         height: 9.5cm !important;
         max-width: 7.2cm !important;
+        max-height: 9.5cm !important;
         box-shadow: none !important;
         border: 1px dashed #94a3b8 !important; /* Scissor cut line */
         margin: 0 auto !important;
@@ -62,51 +688,11 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-
       .fine-border {
         inset: 1mm !important;
       }
     }
 
-
-      .main-wrap,
-      .flex-layout,
-      .preview-wrap {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 210mm !important;
-        height: 297mm !important;
-        max-width: 210mm !important;
-        display: block !important;
-      }
-
-      .admin-card,
-      .page-title,
-      .preview-header,
-      .action-row,
-      .saved-records-card {
-        display: none !important;
-      }
-
-      .sheet {
-        width: 210mm !important;
-        height: 297mm !important;
-        max-width: 100% !important;
-        aspect-ratio: auto !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        overflow: hidden !important;
-        page-break-after: avoid !important;
-        break-after: avoid !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-
-      .fine-border {
-        inset: 1.5mm !important;
-      }
-    }
 
     @media (max-width: 580px) {
       .preview-wrap { flex: 0 0 100%; max-width: 100%; }
@@ -231,7 +817,7 @@
 
       <!-- RIGHT PREVIEW -->
       <section class="preview-wrap">
-        <div class="preview-header">Live Card Preview (पास कार्ड)</div>
+        <div class="preview-header">Live Card Preview (A4 Badge: 7.2cm × 9.5cm)</div>
 
         <!-- THE EXACT OFFICIAL PASS CARD -->
         <main class="sheet container-fluid p-0" aria-label="दीपोत्सव 2026 परिचय पत्र" id="printableCard">
@@ -256,21 +842,117 @@
             <div class="line"><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
           </section>
 
-                    <!-- SIGNATURE ROW -->
+          <!-- SIGNATURE ROW -->
           <div class="signature-row pt-2">
             <div>
               <span class="d-inline-flex">
-                प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई <div class=" sign-1" style="width: 110px; height: 38.8px;"></div>
+                प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई <div class="sign-1" style="width: 110px; height: 38.8px;"></div>
               </span>
             </div>
             <div>
-              <span class="d-inline-flex">नोडल अधिकारी   <img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर"></span>
+              <span class="d-inline-flex">नोडल अधिकारी &nbsp;<img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर"></span>
             </div>
             <div>
-              <span class="d-inline-flex">प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन <img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर"></span>
+              <span class="d-inline-flex">प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन &nbsp;<img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर"></span>
             </div>
           </div>
+
+          <div class="emergency">आपात संपर्क सूत्र - +91 8808160420&nbsp; / &nbsp;+91 9170838005</div>
+          <div class="fine-border"></div>
+        </main>
+      </section>
+    </div>
+
+    <!-- BULK PASS GENERATOR CARD -->
+    <div class="saved-records-card" style="margin-top: 25px; border-top: 4px solid #842b10;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+        <div>
+          <h2 style="font-size:18px; margin:0; color:var(--primary); font-weight:800;">⚡ 100+ Bulk Pass Generator (थोक पास निर्माता)</h2>
+          <p style="font-size:12.5px; color:#64748b; margin:4px 0 0 0;">Ek click me 50 ya 100 passes generate karein — Har pass ka <b>Unique Link & QR Code</b> hoga!</p>
         </div>
+        <button type="button" class="btn-action" style="flex:0 0 auto; background:#842b10; color:white; padding:8px 16px;" onclick="toggleBulkBox()">
+          ⚙️ Open / Close Bulk Generator
+        </button>
+      </div>
+
+      <div id="bulkGeneratorForm" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:20px;">
+        <div class="grid-row" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+          <div class="form-group">
+            <label for="bulkCount">Passes ki Sankhya (Count)</label>
+            <input type="number" id="bulkCount" value="100" min="1" max="500">
+          </div>
+          <div class="form-group">
+            <label for="bulkPrefix">Pass ID Prefix</label>
+            <input type="text" id="bulkPrefix" value="G09-">
+          </div>
+          <div class="form-group">
+            <label for="bulkStartNum">Starting Number (शुरुआती संख्या)</label>
+            <input type="number" id="bulkStartNum" value="5701">
+          </div>
+          <div class="form-group">
+            <label for="bulkDuty">Duty Location (तैनाती स्थल)</label>
+            <input type="text" id="bulkDuty" value="राम की पैड़ी घाट नं : 9">
+          </div>
+          <div class="form-group">
+            <label for="bulkRole">Role (दायित्व)</label>
+            <input type="text" id="bulkRole" value="स्वयंसेवक">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:8px;">
+          <label for="bulkNames">Names List (Optional - 100 Names paste karein ya khali chhod kar auto-number karein):</label>
+          <textarea id="bulkNames" rows="3" placeholder="Paste names one per line (ek line me ek naam)... agar khali chhodenge toh 'स्वयंसेवक 1', 'स्वयंसेवक 2' auto create hoga" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-family:sans-serif;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+          <button type="button" class="btn-action" style="background:#16a34a; color:white; flex:1 1 250px;" onclick="generateBulkPasses()">
+            ⚡ Generate 100 Unique Passes Now
+          </button>
+          <button type="button" class="btn-action" style="background:#0284c7; color:white; flex:1 1 200px;" onclick="generateSample10Passes()">
+            🚀 Quick 10 Passes (Demo)
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Toolbar for Saved Passes -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #e2e8f0;">
+        <div style="font-size:14px; font-weight:700; color:#1e293b;">
+          Total Saved Passes: <span id="totalPassCountBadge" style="background:#842b10; color:white; padding:2px 8px; border-radius:12px; font-size:12px;">0</span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-mini" style="background:#15803d; color:white; padding:6px 12px; font-size:12px;" onclick="exportPassesToCSV()">
+            📥 Download Excel (CSV) All Links
+          </button>
+          <button type="button" class="btn-mini" style="background:#0284c7; color:white; padding:6px 12px; font-size:12px;" onclick="copyAllPassLinks()">
+            📋 Copy All Unique Links
+          </button>
+          <a href="bulk-print.html" target="_blank" class="btn-mini" style="background:#6366f1; color:white; padding:6px 12px; font-size:12px;">
+            🖨️ Print All Passes (PDF)
+          </a>
+          <button type="button" class="btn-mini" style="background:#dc2626; color:white; padding:6px 12px; font-size:12px;" onclick="clearAllSavedPasses()">
+            🗑️ Clear All
+          </button>
+        </div>
+      </div>
+
+      <!-- SAVED RECORDS DATABASE TABLE -->
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pass ID</th>
+              <th>नाम (Name)</th>
+              <th>दायित्व (Role)</th>
+              <th>तैनाती स्थल</th>
+              <th>Unique Pass Link & Actions</th>
+            </tr>
+          </thead>
+          <tbody id="savedPassesTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

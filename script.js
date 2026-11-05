@@ -28,13 +28,16 @@ const btnOpenPass = document.getElementById('btnOpenPass');
 const copyFeedback = document.getElementById('copyFeedback');
 const savedPassesTableBody = document.getElementById('savedPassesTableBody');
 
-// Debounce timer for QR generation to prevent API throttling
+// Debounce timer for QR code
 let qrDebounceTimer = null;
 
-// Default Photo
+// Free Permanent Image Host API Key
+const FREEIMAGE_API_KEY = "6d207e02198a847aa98d0a2a901485a5";
+
+// Default Avatar
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80";
 
-// Function to construct the public pass URL
+// Construct public pass URL
 function getPublicPassUrl() {
   let baseUrl;
   if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -46,7 +49,7 @@ function getPublicPassUrl() {
 
   const passPage = baseUrl + 'pass.html';
 
-  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
@@ -65,7 +68,6 @@ function getPublicPassUrl() {
     params.set('dept', deptVal);
   }
 
-  // Check if a cloud photo URL is set
   const photoUrl = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
   if (photoUrl && !photoUrl.startsWith('data:image')) {
     params.set('photo', photoUrl);
@@ -74,9 +76,9 @@ function getPublicPassUrl() {
   return `${passPage}?${params.toString()}`;
 }
 
-// Update the live preview card and the debounced QR code
+// Update the live preview card and debounced QR code
 function updatePass() {
-  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
@@ -95,7 +97,6 @@ function updatePass() {
     dispPhoto.src = photoVal;
   }
 
-  // Update public share link
   const publicUrl = getPublicPassUrl();
   if (shareableLinkInput) {
     shareableLinkInput.value = publicUrl;
@@ -104,87 +105,87 @@ function updatePass() {
     btnOpenPass.href = publicUrl;
   }
 
-  // Debounced QR code update (Wait 300ms after user stops typing)
+  // Debounced QR code generation
   clearTimeout(qrDebounceTimer);
   qrDebounceTimer = setTimeout(() => {
-    generateQrCode(publicUrl);
-  }, 300);
+    if (qrImage) {
+      const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(publicUrl);
+      qrImage.src = qrApiUrl;
+    }
+  }, 250);
 
-  // Auto-save form fields
   saveFormState();
 }
 
-// Generate QR Code with fallback
-function generateQrCode(url) {
-  if (!qrImage) return;
-  // High quality QR from api.qrserver
-  const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(url);
-  qrImage.src = qrApiUrl;
+// UPLOAD PHOTO TO PERMANENT CLOUD HOST (Freeimage.host / iili.io CDN)
+async function uploadImageFile(file) {
+  if (!file) return;
+
+  if (uploadStatus) {
+    uploadStatus.style.display = 'block';
+    uploadStatus.innerHTML = '⏳ Photo Cloud par upload ho rahi hai... kripya 2 second rukhein.';
+    uploadStatus.style.color = '#d97706';
+  }
+
+  // 1. Show immediate local preview
+  const localReader = new FileReader();
+  localReader.onload = function(evt) {
+    const base64Local = evt.target.result;
+    if (dispPhoto) dispPhoto.src = base64Local;
+    const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
+    try {
+      localStorage.setItem('pass_photo_' + passId, base64Local);
+    } catch (e) {}
+  };
+  localReader.readAsDataURL(file);
+
+  // 2. Upload to permanent CDN
+  try {
+    const formData = new FormData();
+    formData.append('key', FREEIMAGE_API_KEY);
+    formData.append('action', 'upload');
+    formData.append('source', file);
+    formData.append('format', 'json');
+
+    const res = await fetch('https://freeimage.host/api/1/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+    if (data && data.image && data.image.url) {
+      const permanentCdnUrl = data.image.url;
+
+      if (inputPhotoUrl) inputPhotoUrl.value = permanentCdnUrl;
+      if (dispPhoto) dispPhoto.src = permanentCdnUrl;
+
+      if (uploadStatus) {
+        uploadStatus.innerHTML = '✅ Photo permanent cloud par save ho gayi! Mobile scanner par 100% dikhegi.';
+        uploadStatus.style.color = '#16a34a';
+      }
+
+      updatePass();
+    } else {
+      throw new Error('Upload returned invalid payload');
+    }
+  } catch (err) {
+    console.warn('Primary cloud upload failed, using fallback:', err);
+    // Keep local preview
+    if (uploadStatus) {
+      uploadStatus.innerHTML = '✓ Photo local preview me load ho gayi hai.';
+      uploadStatus.style.color = '#0284c7';
+    }
+    updatePass();
+  }
 }
 
-// Photo file upload handler
+// Photo file input handler
 if (inputPhotoFile) {
   inputPhotoFile.addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if (!file) return;
-
-    if (uploadStatus) {
-      uploadStatus.style.display = 'block';
-      uploadStatus.innerHTML = '⏳ Photo process ho rahi hai... kripya rukhein.';
-      uploadStatus.style.color = '#d97706';
+    if (file) {
+      uploadImageFile(file);
     }
-
-    // Step 1: Immediately read local file and show in preview
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      const base64Data = evt.target.result;
-      if (dispPhoto) dispPhoto.src = base64Data;
-
-      // Save to localStorage for this specific pass ID
-      const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
-      try {
-        localStorage.setItem('pass_photo_' + passId, base64Data);
-        localStorage.setItem('latest_uploaded_photo', base64Data);
-      } catch (err) {
-        console.warn('localStorage full:', err);
-      }
-    };
-    reader.readAsDataURL(file);
-
-    // Step 2: Upload to Cloud so Mobile Phones can also see it
-    const formData = new FormData();
-    formData.append('file', file);
-
-    fetch('https://tmpfiles.org/api/v1/upload', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data && data.status === 'success' && data.data && data.data.url) {
-        // Convert to direct download/render link
-        const directUrl = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
-        if (inputPhotoUrl) inputPhotoUrl.value = directUrl;
-        if (dispPhoto) dispPhoto.src = directUrl;
-
-        if (uploadStatus) {
-          uploadStatus.innerHTML = '✅ Photo cloud par save ho gayi! Mobile par bhi show hogi.';
-          uploadStatus.style.color = '#16a34a';
-        }
-
-        updatePass();
-      } else {
-        throw new Error('Upload returned invalid response');
-      }
-    })
-    .catch(err => {
-      console.warn('Cloud upload issue:', err);
-      if (uploadStatus) {
-        uploadStatus.innerHTML = '✓ Photo locally save ho gayi hai. Cloud link ke liye photo URL direct paste bhi kar sakte hain.';
-        uploadStatus.style.color = '#0284c7';
-      }
-      updatePass();
-    });
   });
 }
 
@@ -194,7 +195,7 @@ function setAvatar(url) {
   if (dispPhoto) dispPhoto.src = url;
   if (uploadStatus) uploadStatus.style.display = 'none';
 
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
   localStorage.setItem('pass_photo_' + passId, url);
   updatePass();
 }
@@ -225,14 +226,16 @@ function restoreFormState() {
       if (inputMobile && data.mob) inputMobile.value = data.mob;
       if (inputDept && data.dept) inputDept.value = data.dept;
       if (inputDuty && data.duty) inputDuty.value = data.duty;
-      if (inputPhotoUrl && data.photo) inputPhotoUrl.value = data.photo;
+      if (inputPhotoUrl && data.photo && !data.photo.includes('tmpfiles.org')) {
+        inputPhotoUrl.value = data.photo;
+      }
     } catch (e) {}
   }
 }
 
 // Save Pass Record to Database
 function savePassRecord() {
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-4225500';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
@@ -266,8 +269,6 @@ function savePassRecord() {
 
   localStorage.setItem('all_saved_passes', JSON.stringify(list));
   renderSavedPassesTable();
-
-  // Also auto-copy link
   copyShareLink();
   alert(`✅ Pass [${passId} - ${nameVal}] successfully save ho gaya aur link copy ho gaya!`);
 }
@@ -281,7 +282,7 @@ function renderSavedPassesTable() {
   } catch (e) { list = []; }
 
   if (list.length === 0) {
-    savedPassesTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:14px;">Abhi koi pass save nahi hai. Form bhar kar "💾 Save & Generate Pass" click karein.</td></tr>`;
+    savedPassesTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:14px;">Abhi koi pass save nahi hai. Form bhar kar "💾 Save Pass" click karein.</td></tr>`;
     return;
   }
 
@@ -323,14 +324,14 @@ function loadPassToForm(idx) {
 
 function copySpecificLink(link) {
   navigator.clipboard.writeText(link).then(() => {
-    alert("Pass Link Copied to Clipboard!");
+    alert("Pass Link Copied!");
   }).catch(() => {
     prompt("Copy this link:", link);
   });
 }
 
 function deletePassRecord(idx) {
-  if (!confirm("Kya aap sach me is pass ko delete karna chahte hain?")) return;
+  if (!confirm("Kya aap is pass ko delete karna chahte hain?")) return;
   let list = [];
   try {
     list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];

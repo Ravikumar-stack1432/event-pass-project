@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>डिजिटल परिचय पत्र</title>
+  <title>दीपोत्सव 2026 – डिजिटल परिचय पत्र</title>
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
@@ -20,43 +20,69 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px;
+      padding: 12px;
     }
 
-    /* ONLY THE PASS CARD - NOTHING ELSE */
+    /* THE STANDALONE OFFICIAL DESIGN PASS CARD */
     .pass-card {
       width: 100%;
-      max-width: 390px;
-      background: #fdf5df;
-      background: radial-gradient(circle at 50% 30%, #fffbe8 0%, #f7e6b5 100%);
+      max-width: 440px;
+      background: linear-gradient(180deg, #f7df8b 0%, #fae69e 25%, #fbf0b5 65%, #f7df8b 100%);
       border: 3px solid #d4a034;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+      border-radius: 8px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
       overflow: hidden;
       position: relative;
     }
 
-    /* Top Striped Ribbon */
-    .hazard-stripe {
-      height: 10px;
-      background: repeating-linear-gradient(
-        -45deg,
-        #b81d18,
-        #b81d18 8px,
-        #f5c518 8px,
-        #f5c518 16px
-      );
-      margin-bottom: 8px;
+    /* TOP LOGOS HEADER */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px 6px;
     }
 
-    /* Header */
-    .card-head {
+    .univ-logo-wrap {
+      width: 72px;
+      height: 72px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px solid #eab308;
+    }
+
+    .univ-logo-wrap img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+    }
+
+    .event-logo-wrap {
+      width: 135px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .event-logo-wrap img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* UNIVERSITY & EVENT TITLE */
+    .title-section {
       text-align: center;
-      padding: 10px 10px 0;
+      padding: 4px 12px 6px;
     }
 
     .univ-name {
-      font-size: 14.5px;
+      font-size: 17px;
       font-weight: 800;
       color: #9c1511;
       letter-spacing: 0.3px;
@@ -64,41 +90,65 @@
     }
 
     .event-title {
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 800;
-      color: #80100d;
+      color: #881337;
       margin-top: 3px;
     }
 
-    .badge-ribbon {
-      display: inline-block;
-      background: #c98e1f;
-      color: white;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 2px 24px;
-      margin-top: 5px;
-      border-radius: 3px;
-      letter-spacing: 0.5px;
+    /* HAZARD STRIPES & PARICHAY PATRA RIBBON */
+    .ribbon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 14px;
     }
 
-    /* Center Section: Photo on Left, Serial + QR on Right */
+    .hazard-stripe {
+      position: absolute;
+      width: 100%;
+      height: 14px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #b81d18,
+        #b81d18 9px,
+        #f5c518 9px,
+        #f5c518 18px
+      );
+      z-index: 1;
+    }
+
+    .badge-ribbon {
+      position: relative;
+      z-index: 2;
+      background: #c98e1f;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 4px 34px;
+      letter-spacing: 0.5px;
+      clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 100%, 0% 100%);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    /* CENTER SECTION: PHOTO & QR CODE */
     .center-section {
       display: flex;
       align-items: center;
       justify-content: space-around;
-      padding: 12px 14px 6px;
-      gap: 10px;
+      padding: 0 18px 8px;
+      gap: 14px;
     }
 
     .photo-frame {
-      width: 125px;
-      height: 155px;
-      border: 3px solid #b8860b;
-      border-radius: 6px;
+      width: 135px;
+      height: 170px;
+      border: 3.5px solid #b8860b;
+      border-radius: 4px;
       overflow: hidden;
       background: #e2e8f0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       flex-shrink: 0;
     }
 
@@ -118,98 +168,107 @@
     }
 
     .serial-box {
-      font-size: 13.5px;
+      font-size: 15px;
       font-weight: 800;
-      color: #111;
-      margin-bottom: 6px;
+      color: #0f172a;
+      margin-bottom: 8px;
       letter-spacing: 0.5px;
       text-align: center;
     }
 
-    /* QR Code Container with 100% Crisp White Quiet Zone */
     .qr-white-box {
       background: #ffffff;
       padding: 8px;
-      border: 1.5px solid #222;
+      border: 2px solid #1e293b;
       border-radius: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
     }
 
-    .qr-white-box img,
-    .qr-white-box canvas {
+    .qr-white-box img {
       display: block;
-      width: 108px !important;
-      height: 108px !important;
+      width: 115px !important;
+      height: 115px !important;
     }
 
-    /* Details Table */
+    /* DETAILS TABLE */
     .details-table {
-      padding: 10px 18px 12px;
-      font-size: 13.5px;
-      color: #111;
+      padding: 12px 24px 14px;
+      font-size: 14.5px;
+      color: #0f172a;
     }
 
     .table-row {
       display: flex;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       line-height: 1.35;
     }
 
     .col-label {
-      width: 105px;
-      font-weight: 700;
-      color: #1a1a1a;
+      width: 110px;
+      font-weight: 800;
+      color: #1e293b;
       flex-shrink: 0;
     }
 
     .col-colon {
-      width: 15px;
-      font-weight: 700;
+      width: 16px;
+      font-weight: 800;
     }
 
     .col-val {
       flex: 1;
       font-weight: 700;
-      color: #000;
+      color: #0f172a;
     }
 
-    /* Authorised Signatures Row */
+    /* SIGNATURE BLOCKS (OFFICIAL BLANK PLACEHOLDERS) */
     .sign-row {
       display: flex;
-      border-top: 1px solid #d4a034;
-      border-bottom: 1px solid #d4a034;
+      border-top: 1.5px solid #d4a034;
+      border-bottom: 1.5px solid #d4a034;
       background: rgba(255, 255, 255, 0.45);
-      font-size: 9.5px;
-      font-weight: 700;
-      color: #333;
+      font-size: 10px;
+      font-weight: 800;
+      color: #1e293b;
       text-align: center;
-      padding: 4px 6px;
+      min-height: 48px;
     }
 
     .sign-col {
       flex: 1;
-      border-right: 1px solid #d4a034;
-      padding: 2px 4px;
+      border-right: 1.5px solid #d4a034;
+      padding: 6px 4px;
       display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
     }
 
     .sign-col:last-child {
       border-right: none;
     }
 
-    /* Emergency Footer Strip */
+    .sign-placeholder {
+      font-size: 9px;
+      color: #64748b;
+      font-weight: 600;
+      margin-top: 14px;
+      border-top: 1px dotted #94a3b8;
+      width: 80%;
+      padding-top: 2px;
+    }
+
+    /* EMERGENCY FOOTER STRIP */
     .emergency-bar {
-      background: #b81d18;
+      background: #9c1511;
       color: #ffffff;
       text-align: center;
-      padding: 7px 4px;
-      font-size: 11px;
-      font-weight: 700;
+      padding: 8px 6px;
+      font-size: 12px;
+      font-weight: 800;
       letter-spacing: 0.3px;
     }
 
@@ -221,32 +280,45 @@
 </head>
 <body>
 
-  <!-- ONLY THE PASS CARD -->
+  <!-- THE PASS CARD -->
   <div class="pass-card" id="printableCard">
-    <div class="hazard-stripe"></div>
-
-    <div class="card-head">
-      <div class="univ-name" id="dispUniv">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय</div>
-      <div class="event-title" id="dispEvent">दीपोत्सव 2026, अयोध्या</div>
-      <div class="badge-ribbon" id="dispBadge">परिचय पत्र</div>
+    <!-- TOP LOGOS -->
+    <div class="top-header">
+      <div class="univ-logo-wrap">
+        <img src="univ-logo.png" alt="University Logo" onerror="this.style.display='none'">
+      </div>
+      <div class="event-logo-wrap">
+        <img src="deepotsav-logo.png" alt="Deepotsav Logo" onerror="this.style.display='none'">
+      </div>
     </div>
 
-    <!-- Center: Photo & QR -->
+    <!-- UNIVERSITY & EVENT TITLE -->
+    <div class="title-section">
+      <div class="univ-name" id="dispUniv">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय</div>
+      <div class="event-title" id="dispEvent">दीपोत्सव 2026, अयोध्या</div>
+    </div>
+
+    <!-- HAZARD STRIPE RIBBON -->
+    <div class="ribbon-wrap">
+      <div class="hazard-stripe"></div>
+      <div class="badge-ribbon">परिचय पत्र</div>
+    </div>
+
+    <!-- CENTER: PHOTO & QR -->
     <div class="center-section">
       <div class="photo-frame">
-        <img id="dispPhoto" src="profile.jpg" alt="Pass Photo">
+        <img id="dispPhoto" src="profile.jpg" alt="Pass Photo" onerror="this.src='profile.jpg'">
       </div>
 
       <div class="qr-column">
         <div class="serial-box" id="dispSerial">क्र. G09-05739</div>
         <div class="qr-white-box" id="qrContainer">
-          <!-- Big, Crisp, Easy to Scan QR Code -->
           <img id="qrImage" src="" alt="QR Code">
         </div>
       </div>
     </div>
 
-    <!-- Details Table -->
+    <!-- DETAILS TABLE -->
     <div class="details-table">
       <div class="table-row">
         <span class="col-label">नाम</span>
@@ -279,21 +351,30 @@
       </div>
     </div>
 
-    <!-- Signatures placeholder bar -->
+    <!-- OFFICIAL SIGNATURE BLOCKS -->
     <div class="sign-row">
-      <div class="sign-col">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</div>
-      <div class="sign-col">नोडल अधिकारी</div>
-      <div class="sign-col">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</div>
+      <div class="sign-col">
+        <span>प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
+        <span class="sign-placeholder">हस्ताक्षर</span>
+      </div>
+      <div class="sign-col">
+        <span>नोडल अधिकारी</span>
+        <span class="sign-placeholder">हस्ताक्षर</span>
+      </div>
+      <div class="sign-col">
+        <span>प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
+        <span class="sign-placeholder">हस्ताक्षर</span>
+      </div>
     </div>
 
-    <!-- Emergency Footer -->
+    <!-- EMERGENCY FOOTER STRIP -->
     <div class="emergency-bar" id="dispEmergency">
       आपात संपर्क सूत्र - +91 8808160420 / +91 9170838005
     </div>
   </div>
 
   <script>
-    // Read parameters from URL (supports short keys and full keys)
+    // Read query parameters
     const params = new URLSearchParams(window.location.search);
 
     const id = params.get('id') || 'G09-05739';
@@ -302,7 +383,6 @@
     const mob = params.get('m') || params.get('mob') || '9161914850';
     const duty = params.get('d') || params.get('duty') || 'राम की पैड़ी घाट नं : 9';
     const role = params.get('r') || params.get('role') || 'स्वयंसेवक';
-    const eventName = params.get('event') || 'दीपोत्सव 2026, अयोध्या';
     const photo = params.get('photo');
 
     // Populate data
@@ -312,7 +392,6 @@
     document.getElementById('dispMob').textContent = mob;
     document.getElementById('dispDuty').textContent = duty;
     document.getElementById('dispRole').textContent = role;
-    document.getElementById('dispEvent').textContent = eventName;
 
     // Photo
     const photoElem = document.getElementById('dispPhoto');
@@ -326,24 +405,20 @@
       photoElem.src = "profile.jpg";
     }
 
-    // Generate High-Contrast, Instant-Scan QR Code
-    // Uses current page URL so scanning opens this EXACT pass
+    // High resolution, instant-scan QR Code
     const currentPassUrl = window.location.href;
     const qrImg = document.getElementById('qrImage');
-    
-    // High-resolution (300x300) with proper quiet zone margin=2 for 100% instant phone scan
     const fastQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
     qrImg.src = fastQrUrl;
 
-    // Offline / CDN fallback if api.qrserver takes time
     qrImg.onerror = function() {
       const container = document.getElementById('qrContainer');
       container.innerHTML = '';
       if (typeof QRCode !== 'undefined') {
         new QRCode(container, {
           text: currentPassUrl,
-          width: 108,
-          height: 108,
+          width: 115,
+          height: 115,
           colorDark: "#000000",
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.L

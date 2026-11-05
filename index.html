@@ -231,34 +231,61 @@
     /* THE EXACT PASS CARD */
     .pass-card {
       width: 100%;
-      max-width: 360px;
-      background: radial-gradient(circle at 50% 30%, #fffbe8 0%, #f7e6b5 100%);
+      max-width: 400px;
+      background: linear-gradient(180deg, #f7df8b 0%, #fae69e 25%, #fbf0b5 65%, #f7df8b 100%);
       border: 3px solid #d4a034;
-      border-radius: 12px;
+      border-radius: 8px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       position: relative;
     }
 
-    .hazard-stripe {
-      height: 9px;
-      background: repeating-linear-gradient(
-        -45deg,
-        #b81d18,
-        #b81d18 8px,
-        #f5c518 8px,
-        #f5c518 16px
-      );
-      margin-bottom: 6px;
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px 4px;
     }
 
-    .card-head {
+    .univ-logo-wrap {
+      width: 62px;
+      height: 62px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px solid #eab308;
+    }
+
+    .univ-logo-wrap img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+    }
+
+    .event-logo-wrap {
+      width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .event-logo-wrap img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .title-section {
       text-align: center;
-      padding: 8px 10px 0;
+      padding: 4px 10px 4px;
     }
 
     .univ-name {
-      font-size: 13.5px;
+      font-size: 15px;
       font-weight: 800;
       color: #9c1511;
       letter-spacing: 0.3px;
@@ -266,36 +293,58 @@
     }
 
     .event-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
-      color: #80100d;
+      color: #881337;
       margin-top: 2px;
     }
 
+    .ribbon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 6px 0 10px;
+    }
+
+    .hazard-stripe {
+      position: absolute;
+      width: 100%;
+      height: 12px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #b81d18,
+        #b81d18 8px,
+        #f5c518 8px,
+        #f5c518 16px
+      );
+      z-index: 1;
+    }
+
     .badge-ribbon {
-      display: inline-block;
+      position: relative;
+      z-index: 2;
       background: #c98e1f;
-      color: white;
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 2px 20px;
-      margin-top: 4px;
-      border-radius: 3px;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 3px 28px;
+      clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 100%, 0% 100%);
     }
 
     .center-section {
       display: flex;
       align-items: center;
       justify-content: space-around;
-      padding: 10px 12px 4px;
+      padding: 0 14px 6px;
       gap: 10px;
     }
 
     .photo-frame {
-      width: 115px;
-      height: 145px;
-      border: 2.5px solid #b8860b;
-      border-radius: 6px;
+      width: 120px;
+      height: 150px;
+      border: 3px solid #b8860b;
+      border-radius: 4px;
       overflow: hidden;
       background: #e2e8f0;
       flex-shrink: 0;
@@ -317,7 +366,7 @@
     }
 
     .serial-box {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 800;
       color: #111;
       margin-bottom: 5px;
@@ -338,13 +387,13 @@
 
     .qr-white-box img {
       display: block;
-      width: 100px !important;
-      height: 100px !important;
+      width: 105px !important;
+      height: 105px !important;
     }
 
     .details-table {
-      padding: 8px 14px 10px;
-      font-size: 12.5px;
+      padding: 8px 18px 10px;
+      font-size: 13px;
       color: #111;
     }
 
@@ -356,14 +405,14 @@
 
     .col-label {
       width: 95px;
-      font-weight: 700;
+      font-weight: 800;
       color: #1a1a1a;
       flex-shrink: 0;
     }
 
     .col-colon {
-      width: 12px;
-      font-weight: 700;
+      width: 14px;
+      font-weight: 800;
     }
 
     .col-val {
@@ -374,33 +423,47 @@
 
     .sign-row {
       display: flex;
-      border-top: 1px solid #d4a034;
-      border-bottom: 1px solid #d4a034;
+      border-top: 1.5px solid #d4a034;
+      border-bottom: 1.5px solid #d4a034;
       background: rgba(255, 255, 255, 0.45);
-      font-size: 9px;
-      font-weight: 700;
-      color: #333;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #1e293b;
       text-align: center;
-      padding: 3px 4px;
+      min-height: 42px;
     }
 
     .sign-col {
       flex: 1;
-      border-right: 1px solid #d4a034;
-      padding: 2px 3px;
+      border-right: 1.5px solid #d4a034;
+      padding: 4px 3px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .sign-col:last-child {
       border-right: none;
     }
 
+    .sign-placeholder {
+      font-size: 8.5px;
+      color: #64748b;
+      font-weight: 600;
+      margin-top: 10px;
+      border-top: 1px dotted #94a3b8;
+      width: 75%;
+      padding-top: 2px;
+    }
+
     .emergency-bar {
-      background: #b81d18;
+      background: #9c1511;
       color: #ffffff;
       text-align: center;
       padding: 6px 4px;
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
     }
 
     /* Saved Records Table */
@@ -534,11 +597,25 @@
         <div class="preview-header">Live Card Preview (पास कार्ड)</div>
 
         <div class="pass-card" id="printableCard">
-          <div class="hazard-stripe"></div>
+          <!-- TOP LOGOS -->
+          <div class="top-header">
+            <div class="univ-logo-wrap">
+              <img src="univ-logo.png" alt="University Logo" onerror="this.style.display='none'">
+            </div>
+            <div class="event-logo-wrap">
+              <img src="deepotsav-logo.png" alt="Deepotsav Logo" onerror="this.style.display='none'">
+            </div>
+          </div>
 
-          <div class="card-head">
+          <!-- UNIVERSITY & EVENT TITLE -->
+          <div class="title-section">
             <div class="univ-name">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय</div>
             <div class="event-title">दीपोत्सव 2026, अयोध्या</div>
+          </div>
+
+          <!-- HAZARD STRIPE RIBBON -->
+          <div class="ribbon-wrap">
+            <div class="hazard-stripe"></div>
             <div class="badge-ribbon">परिचय पत्र</div>
           </div>
 
@@ -587,10 +664,20 @@
             </div>
           </div>
 
+          <!-- OFFICIAL SIGNATURE BLOCKS -->
           <div class="sign-row">
-            <div class="sign-col">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</div>
-            <div class="sign-col">नोडल अधिकारी</div>
-            <div class="sign-col">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</div>
+            <div class="sign-col">
+              <span>प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
+              <span class="sign-placeholder">हस्ताक्षर</span>
+            </div>
+            <div class="sign-col">
+              <span>नोडल अधिकारी</span>
+              <span class="sign-placeholder">हस्ताक्षर</span>
+            </div>
+            <div class="sign-col">
+              <span>प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
+              <span class="sign-placeholder">हस्ताक्षर</span>
+            </div>
           </div>
 
           <div class="emergency-bar">

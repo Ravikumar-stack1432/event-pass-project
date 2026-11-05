@@ -152,6 +152,19 @@ function updatePass() {
     }
   }
 
+    const quickVercelLink = document.getElementById('quickVercelLink');
+  if (quickVercelLink) {
+    const vercelUrl = 'https://deeputsav-rmlau-2026.vercel.app/Department/Print_Data?id=' + encodeURIComponent(idVal);
+    quickVercelLink.href = vercelUrl;
+    quickVercelLink.textContent = vercelUrl;
+  }
+  const quickOfficialLink = document.getElementById('quickOfficialLink');
+  if (quickOfficialLink) {
+    const officialUrl = 'https://deeputsav-rmlau-online2026.github.io/event-pass-project/Department/Print_Data.html?id=' + encodeURIComponent(idVal);
+    quickOfficialLink.href = officialUrl;
+    quickOfficialLink.textContent = officialUrl;
+  }
+
   const publicUrl = getPublicPassUrl();
   if (shareableLinkInput) {
     shareableLinkInput.value = publicUrl;

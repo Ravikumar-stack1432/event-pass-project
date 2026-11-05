@@ -1,461 +1,576 @@
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Deepotsav 2026</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deepotsav 2026 </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <style>
+* {
+            box-sizing: border-box;
+        }
 
-    @page {
-      size: A4 portrait;
-      margin: 0;
-    }
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
 
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: #e9e9e9;
-      font-family: 'Hind', sans-serif;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background: #e9e9e9;
+           font-family: 'Hind', sans-serif;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
 
-    .sheet {
-      position: relative;
-      width: min(210mm, 100%);
-      max-width: 530px;
-      height: auto;
-      aspect-ratio: 210 / 297;
-      margin: 12px auto;
-      padding: 0;
-      background-color: #ffffce;
-      background-image: linear-gradient(
-        to right,
-        #e6ab0075,
-        #fffbbf,
-        #e6ab0075
-      );
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
-      overflow: hidden;
-      container-type: inline-size;
-    }
+        .sheet {
+            position: relative;
 
-    .top-panel {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 31.5%;
-      background: radial-gradient(
-        circle at top center,
-        #fffbbf 0%,
-        #ffcc00 50%,
-        #e6ab00 100%
-      );
-      clip-path: polygon(
-        0 0,
-        100% 0,
-        100% 67%,
-        50% 100%,
-        0 67%
-      );
-      z-index: 1;
-    }
+            width: min(210mm, 100%);
+            height: auto;
+            aspect-ratio: 210 / 297;
 
-    .top-panel::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 40%;
-      background: repeating-linear-gradient(
-        55deg,
-        #a42624 0 2.2mm,
-        #f2c64c 2.2mm 4.4mm
-      );
-      clip-path: polygon(
-        0 0,
-        50% 100%,
-        100% 0,
-        100% 24%,
-        50% 100%,
-        0 24%
-      );
-    }
+            margin: 12px auto;
+            padding: 0;
 
-    .seal {
-      position: absolute;
-      z-index: 3;
-      left: 8.7%;
-      top: 2.2%;
-      width: 17%;
-      height: 10.7%;
-      object-fit: contain;
-      border-radius: 50%;
-    }
+            background-image: linear-gradient(
+                to right,
+                #e6ab0075,
+                #fffbbf,
+                #e6ab0075
+            );
 
-    .event-logo {
-      position: absolute;
-      z-index: 3;
-      right: 5%;
-      top: 1.2%;
-      width: 36%;
-      height: 13%;
-      object-fit: contain;
-    }
+            overflow: hidden;
 
-    .university {
-      position: absolute;
-      z-index: 3;
-      left: 4%;
-      top: 14.3%;
-      width: 92%;
-      text-align: center;
-      color: #8e2025;
-      font-size: clamp(12px, 4.3cqw, 36px);
-      font-weight: 800;
-      line-height: 1.4;
-      text-shadow: 0 1px 0 #f3d76b;
-    }
+            container-type: inline-size;
+        }
 
-    .card-title {
-      position: absolute;
-      z-index: 3;
-      top: 22.2%;
-      left: 25%;
-      width: 50%;
-      text-align: center;
-      font-weight: 700;
-      color: #f5e8b5;
-      font-size: clamp(12px, 3.8cqw, 32px);
-      text-shadow: 0 1px 1px #76632c;
-      clip-path: polygon(
-        0% 0%,
-        100% 0%,
-        80% 100%,
-        20% 100%
-      );
-      background: #a38243b3;
-      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
-    }
+        .top-panel {
+            position: absolute;
+            left: 0;
+            top: 0;
 
-    .portrait-frame {
-      position: absolute;
-      z-index: 4;
-      left: 34.5%;
-      top: 26.8%;
-      width: 31%;
-      height: 23.4%;
-      padding: 1mm;
-      background: #b99a3e;
-      border: 1mm solid #e2ca76;
-    }
+            width: 100%;
+            height: 31.5%;
 
-    .portrait-frame img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
+            background: radial-gradient(
+                circle at top center,
+                #fffbbf 0%,
+                #ffcc00 50%,
+                #e6ab00 100%
+            );
 
-    .badge-number {
-      position: absolute;
-      z-index: 4;
-      top: 31.5%;
-      right: 3%;
-      width: 30%;
-      font-size: clamp(10px, 3.3cqw, 28px);
-      font-weight: 700;
-      color: #2d2922;
-      text-align: center;
-      white-space: nowrap;
-    }
+            clip-path: polygon(
+                0 0,
+                100% 0,
+                100% 67%,
+                50% 100%,
+                0 67%
+            );
 
-    .qr {
-      position: absolute;
-      z-index: 4;
-      top: 35.3%;
-      right: 7%;
-      width: 19.5%;
-      height: 13.8%;
-      padding: 1mm;
-      background: #fff;
-      border: 1.2mm solid #b89b43;
-      object-fit: contain;
-    }
+            z-index: 1;
+        }
 
-    .details {
-      position: absolute;
-      z-index: 4;
-      top: 53.4%;
-      left: 20%;
-      width: 82%;
-      color: #29251e;
-      font-size: clamp(10px, 3.35cqw, 28px);
-      font-weight: 500;
-      line-height: 1.6;
-    }
+        .top-panel::after {
+            content: "";
+            position: absolute;
 
-    .details .line {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5em;
-      margin: 0.35% 0;
-    }
+            left: 0;
+            right: 0;
+            bottom: 0;
 
-    .details .label {
-      flex: 0 0 27%;
-      white-space: nowrap;
-      font-weight: 600;
-    }
+            height: 40%;
 
-    .details .value {
-      flex: 1;
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
+            background: repeating-linear-gradient(
+                55deg,
+                #a42624 0 2.2mm,
+                #f2c64c 2.2mm 4.4mm
+            );
 
-    /* SIGNATURE ROW WITH INLINE SIDE-BY-SIDE ALIGNMENT */
-    .signature-row {
-      position: absolute;
-      z-index: 4;
-      left: 0;
-      bottom: 4.5%;
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      border-top: 2px solid #972626;
-      border-bottom: 1px solid #a68c3d;
-      background: linear-gradient(
-        180deg,
-        #ffcc00 0%,
-        #fffbbf 50%,
-        #e6ab00 100%
-      );
-      text-align: center;
-      color: #302b20;
-      font-size: clamp(8px, 2.05cqw, 17px);
-      font-weight: 600;
-      align-items: center;
-    }
+            clip-path: polygon(
+                0 0,
+                50% 100%,
+                100% 0,
+                100% 24%,
+                50% 100%,
+                0 24%
+            );
+        }
 
-    .signature-row > div {
-      min-width: 0;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      border-right: 1px solid #972626;
-      line-height: 1;
-      padding: 1mm;
-    }
+        .seal {
+            position: absolute;
+            z-index: 3;
 
-    .signature-row > div:last-child {
-      border-right: none;
-    }
+            left: 8.7%;
+            top: 2.2%;
 
-    .signature-row img {
-      display: block;
-      width: auto;
-      max-width: 90%;
-      height: 36px;
-      object-fit: contain;
-      margin: 0 auto 2px;
-    }
+            width: 17%;
+            height: 10.7%;
 
-    @media screen and (max-width: 768px) {
-      .signature-row img {
-        height: 20px !important;
-      }
-      .sign-1 {
-        width: 50px !important;
-        height: 20.8px !important;
-      }
-    }
+            object-fit: contain;
+            border-radius: 50%;
+        }
 
-    .emergency {
-      position: absolute;
-      z-index: 5;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 4.5%;
-      background: #be2730;
-      color: #fff3dc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-weight: 500;
-      font-size: clamp(9px, 3.3cqw, 28px);
-      white-space: nowrap;
-      padding: 0 1%;
-    }
+         .event-logo {
+            position: absolute;
+            z-index: 3;
 
-    .fine-border {
-      position: absolute;
-      inset: 1.5mm;
-      pointer-events: none;
-      z-index: 8;
-    }
+            right: 5%;
+            top: 1.2%;
 
-    @media print {
-      html, body {
-        width: 210mm;
-        height: 297mm;
-        margin: 0;
-        padding: 0;
-        background: #fff;
-        overflow: hidden;
-      }
+            width: 36%;
+            height: 13%;
 
-      .sheet {
-        width: 210mm;
-        height: 297mm;
-        max-width: 100%;
-        aspect-ratio: auto;
-        margin: 0;
-        padding: 0;
-        box-shadow: none;
-        overflow: hidden;
-        page-break-after: avoid;
-        break-after: avoid;
-      }
-    }
-  </style>
+            object-fit: contain;
+        }
+
+        .university {
+            position: absolute;
+            z-index: 3;
+
+            left: 4%;
+            top: 14.3%;
+
+            width: 92%;
+
+            text-align: center;
+            color: #8e2025;
+
+            font-size: clamp(12px, 4.3cqw, 36px);
+            font-weight: 800;
+            line-height: 1.4;
+
+            text-shadow: 0 1px 0 #f3d76b;
+        }
+
+        .card-title {
+            position: absolute;
+            z-index: 3;
+
+            top: 22.2%;
+            left: 25%;
+
+            width: 50%;
+
+            text-align: center;
+            font-weight: 700;
+
+            color: #f5e8b5;
+            font-size: clamp(12px, 3.8cqw, 32px);
+
+            text-shadow: 0 1px 1px #76632c;
+
+            clip-path: polygon(
+                0% 0%,
+                100% 0%,
+                80% 100%,
+                20% 100%
+            );
+
+            background: #a38243b3;
+
+            box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .portrait-frame {
+            position: absolute;
+            z-index: 4;
+
+            left: 34.5%;
+            top: 26.8%;
+
+            width: 31%;
+            height: 23.4%;
+
+            padding: 1mm;
+
+            background: #b99a3e;
+            border: 1mm solid #e2ca76;
+        }
+
+        .portrait-frame img {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .badge-number {
+            position: absolute;
+            z-index: 4;
+
+            top: 31.5%;
+            right: 3%;
+
+            width: 30%;
+
+            font-size: clamp(10px, 3.3cqw, 28px);
+            font-weight: 700;
+
+            color: #2d2922;
+            text-align: center;
+
+            white-space: nowrap;
+        }
+
+         .qr {
+            position: absolute;
+            z-index: 4;
+
+            top: 35.3%;
+            right: 7%;
+
+            width: 19.5%;
+            height: 13.8%;
+
+            padding: 1mm;
+
+            background: #fff;
+            border: 1.2mm solid #b89b43;
+
+            object-fit: contain;
+        }
+
+         .details {
+            position: absolute;
+            z-index: 4;
+
+            top: 53.4%;
+            left: 20%;
+
+            width: 82%;
+
+            color: #29251e;
+
+            font-size: clamp(10px, 3.35cqw, 28px);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .details .line {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 0.5em;
+            margin: 0.35% 0;
+        }
+
+        .details .label {
+            flex: 0 0 27%;
+
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .details .value {
+            flex: 1;
+            min-width: 0;
+
+            overflow-wrap: anywhere;
+        }
+
+
+         .signature-row {
+            position: absolute;
+            z-index: 4;
+
+            left: 0;
+            bottom: 4.5%;
+
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+
+             border-top: 2px solid #972626;
+    border-bottom: 1px solid #a68c3d;
+    background: linear-gradient(
+      180deg,
+
+      #ffcc00 0%,
+       #fffbbf 50%,
+      #e6ab00 100%
+    );
+
+            text-align: center;
+            color: #302b20;
+
+            font-size: clamp(8px, 2.05cqw, 17px);
+            font-weight: 600;
+
+            align-items: center;
+        }
+
+        .signature-row > div {
+            min-width: 0;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: flex-end;
+            border-right: 1px solid #972626;
+            line-height: 1;
+            padding: 1mm;
+        }
+
+        .signature-row img {
+            display: block;
+
+            width: auto;
+            max-width: 90%;
+            height: 36px;
+
+            object-fit: contain;
+            margin: 0 auto 2px;
+        }
+
+        .emergency {
+            position: absolute;
+            z-index: 5;
+
+            left: 0;
+            bottom: 0;
+
+            width: 100%;
+            height: 4.5%;
+
+            background: #be2730;
+            color: #fff3dc;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+            font-weight: 500;
+
+            font-size: clamp(9px, 3.3cqw, 28px);
+
+            white-space: nowrap;
+            padding: 0 1%;
+        }
+
+        .fine-border {
+            position: absolute;
+            inset: 1.5mm;
+
+            pointer-events: none;
+            z-index: 8;
+        }
+
+         @media screen and (max-width: 768px) {
+
+            .sheet {
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            .university {
+                line-height: 1.45;
+            }
+
+            .details {
+                line-height: 1.5;
+            }
+
+            .details .line {
+                gap: 0.35em;
+            }
+
+            .details .label {
+                flex-basis: 29%;
+            }
+
+            .signature-row > div {
+                padding: 0.5mm;
+            }
+
+            .emergency {
+                letter-spacing: -0.02em;
+            }
+            .signature-row img{
+              height:20px !important;
+            }
+            .sign-1{
+              width: 50px !important;
+    height: 20.8px !important;
+            }
+        }
+
+         @media screen and (max-width: 360px) {
+
+            .university {
+                font-size: 4.1cqw;
+            }
+
+            .details {
+                font-size: 3.2cqw;
+            }
+
+            .details .label {
+                flex-basis: 30%;
+            }
+
+            .badge-number {
+                font-size: 3.1cqw;
+            }
+
+            .emergency {
+                font-size: 3.1cqw;
+            }
+        }
+
+        @media print {
+
+            html,
+            body {
+                width: 210mm;
+                height: 297mm;
+
+                margin: 0;
+                padding: 0;
+
+                background: #fff;
+                overflow: hidden;
+            }
+
+            .sheet {
+                width: 210mm;
+                height: 297mm;
+
+                aspect-ratio: auto;
+
+                margin: 0;
+                padding: 0;
+
+                overflow: hidden;
+
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            .fine-border {
+                inset: 1.5mm;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <main class="sheet container-fluid p-0" aria-label="दीपोत्सव 2026 परिचय पत्र" id="printableCard">
+        <div class="top-panel"></div>
+        <img class="seal" src="seal.png" alt="विश्वविद्यालय का चिह्न">
+        <img class="event-logo" src="event-logo.png" alt="दीपोत्सव अयोध्या 2026">
+        <div class="university">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय<br>दीपोत्सव 2026, अयोध्या</div>
+        <div class="card-title">परिचय पत्र</div>
+        <div class="portrait-frame"><img id="dispPhoto" src="profile.jpg" alt="कार्ड धारक का फोटो" onerror="if(this.src!=='profile.jpg')this.src='profile.jpg'"></div>
+        <div class="badge-number" id="dispSerial">क्र.G09-05739</div>
+        <img class="qr" id="qrImage" src="" alt="QR कोड">
+        <section class="details">
+            <div class="line"><div class="label">नाम:</div><div class="value" id="dispName">अंशुमन</div></div>
+            <div class="line"><div class="label">संस्था/इकाई:</div><div class="value" id="dispDept">Dr Rammanohar Lohia Awadh University Ayodhya </div></div>
+            <div class="line"><div class="label">मोबाइल नं.:</div><div class="value" id="dispMob">9161914850</div></div>
+            <div class="line"><div class="label">तैनाती स्थल:</div><div class="value" id="dispDuty">राम की पैड़ी घाट नं : 9</div></div>
+            <div class="line "><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
+        </section> 
+        <div class="signature-row pt-2">
+            <div>
+                <span class="d-inline-flex">
+                    प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई <div class=" sign-1" style="width: 110px; height: 38.8px;"></div>
+                </span>
+            </div>
+            <div>
+                <span class="d-inline-flex">नोडल अधिकारी &nbsp;<img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर"></span>
+            </div>
+            <div>
+                <span class="d-inline-flex">प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन &nbsp;<img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर"></span>
+            </div>
+        </div>
+        <div class="emergency">आपात संपर्क सूत्र - +91 8808160420&nbsp; / &nbsp;+91 9170838005</div>
+        <div class="fine-border"></div>
+    </main>
 
-  <main class="sheet container-fluid p-0" aria-label="दीपोत्सव 2026 परिचय पत्र" id="printableCard">
-    <div class="top-panel"></div>
-    <img class="seal" src="seal.png" alt="विश्वविद्यालय का चिह्न">
-    <img class="event-logo" src="event-logo.png" alt="दीपोत्सव अयोध्या 2026">
-    <div class="university">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय<br>दीपोत्सव 2026, अयोध्या</div>
-    <div class="card-title">परिचय पत्र</div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
 
-    <div class="portrait-frame">
-      <img id="dispPhoto" src="profile.jpg" alt="कार्ड धारक का फोटो" onerror="if(this.src!=='profile.jpg')this.src='profile.jpg'">
-    </div>
+        let id = params.get('id') || params.get('ID') || 'G09-05739';
+        let name = params.get('n') || params.get('name');
+        let dept = params.get('dept');
+        let mob = params.get('m') || params.get('mob');
+        let duty = params.get('d') || params.get('duty');
+        let role = params.get('r') || params.get('role');
+        let photo = params.get('photo');
 
-    <div class="badge-number" id="dispSerial">क्र.G09-05739</div>
-    <img class="qr" id="qrImage" src="" alt="QR कोड">
+        function applyPassData(pId, pName, pDept, pMob, pDuty, pRole, pPhoto) {
+            document.getElementById('dispSerial').textContent = pId.startsWith('क्र.') ? pId : ('क्र.' + pId);
+            document.getElementById('dispName').textContent = pName || 'अंशुमन';
+            document.getElementById('dispDept').textContent = (pDept || 'Dr Rammanohar Lohia Awadh University Ayodhya') + ' ';
+            document.getElementById('dispMob').textContent = pMob || '9161914850';
+            document.getElementById('dispDuty').textContent = pDuty || 'राम की पैड़ी घाट नं : 9';
+            document.getElementById('dispRole').textContent = pRole || 'स्वयंसेवक';
 
-    <section class="details">
-      <div class="line"><div class="label">नाम:</div><div class="value" id="dispName">अंशुमन</div></div>
-      <div class="line"><div class="label">संस्था/इकाई:</div><div class="value" id="dispDept">Dr Rammanohar Lohia Awadh University Ayodhya</div></div>
-      <div class="line"><div class="label">मोबाइल नं.:</div><div class="value" id="dispMob">9161914850</div></div>
-      <div class="line"><div class="label">तैनाती स्थल:</div><div class="value" id="dispDuty">राम की पैड़ी घाट नं : 9</div></div>
-      <div class="line"><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
-    </section>
+            const photoElem = document.getElementById('dispPhoto');
+            photoElem.onerror = function() {
+                this.src = "profile.jpg";
+            };
 
-    <!-- SIGNATURE ROW -->
-    <div class="signature-row pt-2">
-      <div>
-        <span class="d-inline-flex">
-          प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई <div class="sign-1" style="width: 110px; height: 38.8px;"></div>
-        </span>
-      </div>
-      <div>
-        <span class="d-inline-flex">नोडल अधिकारी &nbsp;<img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर"></span>
-      </div>
-      <div>
-        <span class="d-inline-flex">प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन &nbsp;<img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर"></span>
-      </div>
-    </div>
+            if (pPhoto && pPhoto !== 'profile.jpg' && !pPhoto.includes('tmpfiles.org')) {
+                photoElem.src = pPhoto;
+            } else {
+                photoElem.src = "profile.jpg";
+            }
 
-    <div class="emergency">आपात संपर्क सूत्र - +91 8808160420&nbsp; / &nbsp;+91 9170838005</div>
-    <div class="fine-border"></div>
-  </main>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-
-    let id = params.get('id') || params.get('ID') || 'G09-05739';
-    let name = params.get('n') || params.get('name');
-    let dept = params.get('dept');
-    let mob = params.get('m') || params.get('mob');
-    let duty = params.get('d') || params.get('duty');
-    let role = params.get('r') || params.get('role');
-    let photo = params.get('photo');
-
-    function applyPassData(pId, pName, pDept, pMob, pDuty, pRole, pPhoto) {
-      document.getElementById('dispSerial').textContent = pId.startsWith('क्र.') ? pId : ('क्र.' + pId);
-      document.getElementById('dispName').textContent = pName || 'अंशुमन';
-      document.getElementById('dispDept').textContent = pDept || 'Dr Rammanohar Lohia Awadh University Ayodhya';
-      document.getElementById('dispMob').textContent = pMob || '9161914850';
-      document.getElementById('dispDuty').textContent = pDuty || 'राम की पैड़ी घाट नं : 9';
-      document.getElementById('dispRole').textContent = pRole || 'स्वयंसेवक';
-
-      const photoElem = document.getElementById('dispPhoto');
-      photoElem.onerror = function() {
-        this.src = "profile.jpg";
-      };
-
-      if (pPhoto && pPhoto !== 'profile.jpg' && !pPhoto.includes('tmpfiles.org')) {
-        photoElem.src = pPhoto;
-      } else {
-        photoElem.src = "profile.jpg";
-      }
-
-      const currentPassUrl = window.location.href;
-      const qrImg = document.getElementById('qrImage');
-      const fastQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
-      qrImg.src = fastQrUrl;
-    }
-
-    async function initPass() {
-      // 1. Initial render from URL params if present
-      applyPassData(id, name, dept, mob, duty, role, photo);
-
-      // 2. If short link (missing details), lookup in localStorage or passes.json
-      if (!name || !photo || id === 'MzI3ODY=' || id === 'G09-05873') {
-        let registry = {};
-        try {
-          const res = await fetch('passes.json');
-          if (res.ok) registry = await res.json();
-        } catch(e) {
-          try {
-            const res2 = await fetch('../passes.json');
-            if (res2.ok) registry = await res2.json();
-          } catch(e2) {}
+            const currentPassUrl = window.location.href;
+            const qrImg = document.getElementById('qrImage');
+            qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
         }
 
-        // Also check local storage
-        try {
-          const saved = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
-          saved.forEach(p => { if (p.id) registry[p.id] = p; });
-        } catch(e) {}
+        async function initPass() {
+            applyPassData(id, name, dept, mob, duty, role, photo);
 
-        const matched = registry[id];
-        if (matched) {
-          name = name || matched.name;
-          dept = dept || matched.dept;
-          mob = mob || matched.mob;
-          duty = duty || matched.duty;
-          role = role || matched.role;
-          photo = photo || matched.photo;
-          applyPassData(id, name, dept, mob, duty, role, photo);
+            if (!name || !photo || id === 'MzI3ODY=' || id === 'G09-05873' || id === 'G09-05739') {
+                let registry = {};
+                try {
+                    const res = await fetch('passes.json');
+                    if (res.ok) registry = await res.json();
+                } catch(e) {
+                    try {
+                        const res2 = await fetch('../passes.json');
+                        if (res2.ok) registry = await res2.json();
+                    } catch(e2) {}
+                }
+
+                try {
+                    const saved = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+                    saved.forEach(p => { if (p.id) registry[p.id] = p; });
+                } catch(e) {}
+
+                const matched = registry[id];
+                if (matched) {
+                    name = name || matched.name;
+                    dept = dept || matched.dept;
+                    mob = mob || matched.mob;
+                    duty = duty || matched.duty;
+                    role = role || matched.role;
+                    photo = photo || matched.photo;
+                    applyPassData(id, name, dept, mob, duty, role, photo);
+                }
+            }
         }
-      }
-    }
 
-    initPass();
-  </script>
+        initPass();
+    </script>
 </body>
 </html>

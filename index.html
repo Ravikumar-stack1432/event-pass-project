@@ -338,9 +338,9 @@
       background-color: #ffffce;
       background-image: linear-gradient(
         to right,
-        #e9cf84 0%,
-        #ffffce 50%,
-        #ebd184 100%
+        #e6ab0075,
+        #fffbbf,
+        #e6ab0075
       );
       box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
       overflow: hidden;
@@ -355,9 +355,9 @@
       height: 31.5%;
       background: radial-gradient(
         circle at top center,
-        #fff8b0 0%,
-        #ffe771 50%,
-        #e5aa02 100%
+        #fffbbf 0%,
+        #ffcc00 50%,
+        #e6ab00 100%
       );
       clip-path: polygon(
         0 0,
@@ -378,8 +378,8 @@
       height: 40%;
       background: repeating-linear-gradient(
         55deg,
-        #992c14 0 2.2mm,
-        #f4bd0c 2.2mm 4.4mm
+        #a42624 0 2.2mm,
+        #f2c64c 2.2mm 4.4mm
       );
       clip-path: polygon(
         0 0,
@@ -419,7 +419,7 @@
       top: 14.3%;
       width: 92%;
       text-align: center;
-      color: #842b10;
+      color: #8e2025;
       font-size: clamp(12px, 4.3cqw, 36px);
       font-weight: 800;
       line-height: 1.4;
@@ -434,7 +434,7 @@
       width: 50%;
       text-align: center;
       font-weight: 700;
-      color: #fdf6d8;
+      color: #f5e8b5;
       font-size: clamp(12px, 3.8cqw, 32px);
       text-shadow: 0 1px 1px #76632c;
       clip-path: polygon(
@@ -443,7 +443,7 @@
         80% 100%,
         20% 100%
       );
-      background: #c19d38;
+      background: #a38243b3;
       box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
     }
 
@@ -515,7 +515,7 @@
     .details .label {
       flex: 0 0 27%;
       white-space: nowrap;
-      font-weight: 700;
+      font-weight: 600;
     }
 
     .details .value {
@@ -524,14 +524,13 @@
       overflow-wrap: anywhere;
     }
 
-    /* SIGNATURE ROW WITH SIDE-BY-SIDE INLINE ALIGNMENT */
+    /* SIGNATURE ROW */
     .signature-row {
       position: absolute;
       z-index: 4;
       left: 0;
       bottom: 4.5%;
       width: 100%;
-      height: 38px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       border-top: 2px solid #972626;
@@ -542,7 +541,10 @@
         #fffbbf 50%,
         #e6ab00 100%
       );
+      text-align: center;
       color: #302b20;
+      font-size: clamp(8px, 2.05cqw, 17px);
+      font-weight: 600;
       align-items: center;
     }
 
@@ -550,39 +552,35 @@
       min-width: 0;
       height: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       border-right: 1px solid #972626;
-      padding: 1px 4px;
+      line-height: 1;
+      padding: 1mm;
     }
 
     .signature-row > div:last-child {
       border-right: none;
     }
 
-    .sig-content {
-      display: inline-flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      width: 100%;
-    }
-
-    .sig-text {
-      font-size: clamp(8px, 1.9cqw, 13.5px);
-      font-weight: 700;
-      line-height: 1.15;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .sig-content img {
+    .signature-row img {
       display: block;
-      height: 25px;
       width: auto;
-      max-width: 55px;
+      max-width: 90%;
+      height: 36px;
       object-fit: contain;
+      margin: 0 auto 2px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .signature-row img {
+        height: 20px !important;
+      }
+      .sign-1 {
+        width: 50px !important;
+        height: 20.8px !important;
+      }
     }
 
     .emergency {
@@ -592,12 +590,17 @@
       bottom: 0;
       width: 100%;
       height: 4.5%;
-      background: #b92a31;
+      background: #be2730;
       color: #fff3dc;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      font-weight: 500;
+      font-size: clamp(9px, 3.3cqw, 28px);
+      white-space: nowrap;
+      padding: 0 1%;
+    }
       font-weight: 500;
       font-size: clamp(9px, 3.3cqw, 28px);
       white-space: nowrap;
@@ -796,24 +799,18 @@
             <div class="line"><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
           </section>
 
-          <!-- SIGNATURE ROW WITH INLINE SIDE-BY-SIDE IMAGES -->
-          <div class="signature-row">
+          <!-- SIGNATURE ROW -->
+          <div class="signature-row pt-2">
             <div>
-              <div class="sig-content">
-                <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
-              </div>
+              <span class="d-inline-flex">
+                प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई <div class="sign-1" style="width: 110px; height: 38.8px;"></div>
+              </span>
             </div>
             <div>
-              <div class="sig-content">
-                <span class="sig-text">नोडल अधिकारी</span>
-                <img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर">
-              </div>
+              <span class="d-inline-flex">नोडल अधिकारी &nbsp;<img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर"></span>
             </div>
             <div>
-              <div class="sig-content">
-                <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
-                <img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर">
-              </div>
+              <span class="d-inline-flex">प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन &nbsp;<img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर"></span>
             </div>
           </div>
 

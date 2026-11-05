@@ -82,9 +82,9 @@
       background-color: #ffffce;
       background-image: linear-gradient(
         to right,
-        #e9cf84 0%,
-        #ffffce 50%,
-        #ebd184 100%
+        #e6ab0075,
+        #fffbbf,
+        #e6ab0075
       );
       box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
       overflow: hidden;
@@ -101,9 +101,9 @@
       height: 31.5%;
       background: radial-gradient(
         circle at top center,
-        #fff8b0 0%,
-        #ffe771 50%,
-        #e5aa02 100%
+        #fffbbf 0%,
+        #ffcc00 50%,
+        #e6ab00 100%
       );
       clip-path: polygon(0 0, 100% 0, 100% 67%, 50% 100%, 0 67%);
       z-index: 1;
@@ -118,8 +118,8 @@
       height: 40%;
       background: repeating-linear-gradient(
         55deg,
-        #992c14 0 2.2mm,
-        #f4bd0c 2.2mm 4.4mm
+        #a42624 0 2.2mm,
+        #f2c64c 2.2mm 4.4mm
       );
       clip-path: polygon(0 0, 50% 100%, 100% 0, 100% 24%, 50% 100%, 0 24%);
     }
@@ -138,62 +138,58 @@
     .event-logo {
       position: absolute;
       z-index: 3;
-      right: 8%;
-      top: 2%;
-      width: 28%;
-      height: 11.2%;
+      right: 5%;
+      top: 1.2%;
+      width: 36%;
+      height: 13%;
       object-fit: contain;
     }
 
     .university {
       position: absolute;
       z-index: 3;
-      left: 2%;
-      right: 2%;
-      top: 14.5%;
+      left: 4%;
+      top: 14.3%;
+      width: 92%;
       text-align: center;
-      color: #842b10;
+      color: #8e2025;
+      font-size: clamp(12px, 4.3cqw, 36px);
       font-weight: 800;
-      font-size: clamp(10px, 3.8cqw, 28px);
-      line-height: 1.25;
+      line-height: 1.4;
       text-shadow: 0 1px 0 #f3d76b;
-      white-space: nowrap;
     }
 
     .card-title {
       position: absolute;
       z-index: 3;
-      left: 20%;
-      right: 20%;
-      top: 22.8%;
-      height: 5.6%;
-      background: #c19d38;
-      clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fdf6d8;
+      top: 22.2%;
+      left: 25%;
+      width: 50%;
+      text-align: center;
       font-weight: 700;
-      font-size: clamp(10px, 3.8cqw, 28px);
-      letter-spacing: 0.8px;
+      color: #f5e8b5;
+      font-size: clamp(12px, 3.8cqw, 32px);
       text-shadow: 0 1px 1px #76632c;
+      clip-path: polygon(
+        0% 0%,
+        100% 0%,
+        80% 100%,
+        20% 100%
+      );
+      background: #a38243b3;
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
     }
 
     .portrait-frame {
       position: absolute;
       z-index: 4;
       left: 34.5%;
-      top: 27.2%;
+      top: 26.8%;
       width: 31%;
       height: 23.4%;
-      background: #fffffc;
-      border: 3.5px solid #d4af37;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-      padding: 0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 1mm;
+      background: #b99a3e;
+      border: 1mm solid #e2ca76;
     }
 
     .portrait-frame img {
@@ -206,12 +202,12 @@
     .badge-number {
       position: absolute;
       z-index: 4;
-      right: 8%;
-      top: 31.8%;
-      width: 25%;
-      font-weight: 800;
-      font-size: clamp(11px, 3.4cqw, 24px);
-      color: #000;
+      top: 31.5%;
+      right: 3%;
+      width: 30%;
+      font-size: clamp(10px, 3.3cqw, 28px);
+      font-weight: 700;
+      color: #2d2922;
       text-align: center;
       white-space: nowrap;
     }
@@ -219,46 +215,44 @@
     .qr {
       position: absolute;
       z-index: 4;
-      right: 8%;
-      top: 35.8%;
-      width: 25%;
-      aspect-ratio: 1 / 1;
-      border: 2px solid #576574;
+      top: 35.3%;
+      right: 7%;
+      width: 19.5%;
+      height: 13.8%;
+      padding: 1mm;
       background: #fff;
-      padding: 1.5%;
+      border: 1.2mm solid #b89b43;
       object-fit: contain;
     }
 
     .details {
       position: absolute;
       z-index: 4;
+      top: 53.4%;
       left: 20%;
-      right: 9%;
-      top: 53.5%;
-      display: flex;
-      flex-direction: column;
-      gap: clamp(7px, 2.1cqw, 15px);
-      font-size: clamp(11px, 3.45cqw, 25px);
-      line-height: 1.25;
-      color: #000;
+      width: 82%;
+      color: #29251e;
+      font-size: clamp(10px, 3.35cqw, 28px);
+      font-weight: 500;
+      line-height: 1.6;
     }
 
     .details .line {
       display: flex;
-      align-items: baseline;
+      align-items: flex-start;
+      gap: 0.5em;
+      margin: 0.35% 0;
     }
 
     .details .label {
-      flex: 0 0 40%;
-      font-weight: 700;
-      color: #000;
+      flex: 0 0 27%;
       white-space: nowrap;
+      font-weight: 600;
     }
 
     .details .value {
       flex: 1;
       min-width: 0;
-      font-weight: 500;
       overflow-wrap: anywhere;
     }
 
@@ -268,13 +262,15 @@
       left: 0;
       bottom: 4.5%;
       width: 100%;
-      height: 38px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       border-top: 2px solid #972626;
       border-bottom: 1px solid #a68c3d;
       background: linear-gradient(180deg, #ffcc00 0%, #fffbbf 50%, #e6ab00 100%);
+      text-align: center;
       color: #302b20;
+      font-size: clamp(8px, 2.05cqw, 17px);
+      font-weight: 600;
       align-items: center;
     }
 
@@ -282,39 +278,35 @@
       min-width: 0;
       height: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       border-right: 1px solid #972626;
-      padding: 1px 4px;
+      line-height: 1;
+      padding: 1mm;
     }
 
     .signature-row > div:last-child {
       border-right: none;
     }
 
-    .sig-content {
-      display: inline-flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      width: 100%;
-    }
-
-    .sig-text {
-      font-size: clamp(8px, 1.9cqw, 13.5px);
-      font-weight: 700;
-      line-height: 1.15;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .sig-content img {
+    .signature-row img {
       display: block;
-      height: 25px;
       width: auto;
-      max-width: 55px;
+      max-width: 90%;
+      height: 36px;
       object-fit: contain;
+      margin: 0 auto 2px;
+    }
+
+    @media screen and (max-width: 768px) {
+      .signature-row img {
+        height: 20px !important;
+      }
+      .sign-1 {
+        width: 50px !important;
+        height: 20.8px !important;
+      }
     }
 
     .emergency {
@@ -324,7 +316,7 @@
       bottom: 0;
       width: 100%;
       height: 4.5%;
-      background: #b92a31;
+      background: #be2730;
       color: #fff3dc;
       display: flex;
       align-items: center;
@@ -443,23 +435,17 @@
               <div class="line"><div class="label">दायित्व:</div><div class="value">${roleVal}</div></div>
             </section>
 
-            <div class="signature-row">
+            <div class="signature-row pt-2">
               <div>
-                <div class="sig-content">
-                  <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
-                </div>
+                <span class="d-inline-flex">
+                  प्राधिकृत हस्ताक्षरी <br> संस्था/इकाई <div class="sign-1" style="width: 110px; height: 38.8px;"></div>
+                </span>
               </div>
               <div>
-                <div class="sig-content">
-                  <span class="sig-text">नोडल अधिकारी</span>
-                  <img src="Department/sig2.png" alt="नोडल अधिकारी">
-                </div>
+                <span class="d-inline-flex">नोडल अधिकारी &nbsp;<img src="Department/sig2.png" alt="नोडल अधिकारी"></span>
               </div>
               <div>
-                <div class="sig-content">
-                  <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
-                  <img src="Department/sig1.png" alt="जिला प्रशासन">
-                </div>
+                <span class="d-inline-flex">प्राधिकृत हस्ताक्षरी <br> जिला प्रशासन &nbsp;<img src="Department/sig1.png" alt="जिला प्रशासन"></span>
               </div>
             </div>
 

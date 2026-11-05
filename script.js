@@ -1,5 +1,5 @@
 // Live Base URL for GitHub Pages
-const LIVE_BASE_URL = "https://ravikumar-stack1432.github.io/event-pass-project/";
+const LIVE_BASE_URL = "https://deeputsav-rmlau-online2026.github.io/event-pass-project/";
 
 // Form Elements
 const inputPassId = document.getElementById('inputPassId');

@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deepotsav 2026</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #e9e9e9;
+      font-family: 'Hind', sans-serif;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sheet {
+      position: relative;
+      width: min(210mm, 100%);
+      max-width: 530px;
+      height: auto;
+      aspect-ratio: 210 / 297;
+      margin: 12px auto;
+      padding: 0;
+      background-color: #ffffce;
+      background-image: linear-gradient(
+        to right,
+        #e9cf84 0%,
+        #ffffce 50%,
+        #ebd184 100%
+      );
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      container-type: inline-size;
+    }
+
+    .top-panel {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 31.5%;
+      background: radial-gradient(
+        circle at top center,
+        #fff8b0 0%,
+        #ffe771 50%,
+        #e5aa02 100%
+      );
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 67%,
+        50% 100%,
+        0 67%
+      );
+      z-index: 1;
+    }
+
+    .top-panel::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40%;
+      background: repeating-linear-gradient(
+        55deg,
+        #992c14 0 2.2mm,
+        #f4bd0c 2.2mm 4.4mm
+      );
+      clip-path: polygon(
+        0 0,
+        50% 100%,
+        100% 0,
+        100% 24%,
+        50% 100%,
+        0 24%
+      );
+    }
+
+    .seal {
+      position: absolute;
+      z-index: 3;
+      left: 8.7%;
+      top: 2.2%;
+      width: 17%;
+      height: 10.7%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .event-logo {
+      position: absolute;
+      z-index: 3;
+      right: 5%;
+      top: 1.2%;
+      width: 36%;
+      height: 13%;
+      object-fit: contain;
+    }
+
+    .university {
+      position: absolute;
+      z-index: 3;
+      left: 4%;
+      top: 14.3%;
+      width: 92%;
+      text-align: center;
+      color: #842b10;
+      font-size: clamp(12px, 4.3cqw, 36px);
+      font-weight: 800;
+      line-height: 1.4;
+      text-shadow: 0 1px 0 #f3d76b;
+    }
+
+    .card-title {
+      position: absolute;
+      z-index: 3;
+      top: 22.2%;
+      left: 25%;
+      width: 50%;
+      text-align: center;
+      font-weight: 700;
+      color: #fdf6d8;
+      font-size: clamp(12px, 3.8cqw, 32px);
+      text-shadow: 0 1px 1px #76632c;
+      clip-path: polygon(
+        0% 0%,
+        100% 0%,
+        80% 100%,
+        20% 100%
+      );
+      background: #c19d38;
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
+    }
+
+    .portrait-frame {
+      position: absolute;
+      z-index: 4;
+      left: 34.5%;
+      top: 26.8%;
+      width: 31%;
+      height: 23.4%;
+      padding: 1mm;
+      background: #b99a3e;
+      border: 1mm solid #e2ca76;
+    }
+
+    .portrait-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .badge-number {
+      position: absolute;
+      z-index: 4;
+      top: 31.5%;
+      right: 3%;
+      width: 30%;
+      font-size: clamp(10px, 3.3cqw, 28px);
+      font-weight: 700;
+      color: #2d2922;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .qr {
+      position: absolute;
+      z-index: 4;
+      top: 35.3%;
+      right: 7%;
+      width: 19.5%;
+      height: 13.8%;
+      padding: 1mm;
+      background: #fff;
+      border: 1.2mm solid #b89b43;
+      object-fit: contain;
+    }
+
+    .details {
+      position: absolute;
+      z-index: 4;
+      top: 53.4%;
+      left: 20%;
+      width: 82%;
+      color: #29251e;
+      font-size: clamp(10px, 3.35cqw, 28px);
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .details .line {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5em;
+      margin: 0.35% 0;
+    }
+
+    .details .label {
+      flex: 0 0 27%;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .details .value {
+      flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* SIGNATURE ROW WITH INLINE SIDE-BY-SIDE ALIGNMENT */
+    .signature-row {
+      position: absolute;
+      z-index: 4;
+      left: 0;
+      bottom: 4.5%;
+      width: 100%;
+      height: 38px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 2px solid #972626;
+      border-bottom: 1px solid #a68c3d;
+      background: linear-gradient(
+        180deg,
+        #ffcc00 0%,
+        #fffbbf 50%,
+        #e6ab00 100%
+      );
+      color: #302b20;
+      align-items: center;
+    }
+
+    .signature-row > div {
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #972626;
+      padding: 1px 4px;
+    }
+
+    .signature-row > div:last-child {
+      border-right: none;
+    }
+
+    .sig-content {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .sig-text {
+      font-size: clamp(8px, 1.9cqw, 13.5px);
+      font-weight: 700;
+      line-height: 1.15;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .sig-content img {
+      display: block;
+      height: 25px;
+      width: auto;
+      max-width: 55px;
+      object-fit: contain;
+    }
+
+    .emergency {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4.5%;
+      background: #b92a31;
+      color: #fff3dc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 500;
+      font-size: clamp(9px, 3.3cqw, 28px);
+      white-space: nowrap;
+      padding: 0 1%;
+    }
+
+    .fine-border {
+      position: absolute;
+      inset: 1.5mm;
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    @media print {
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        overflow: hidden;
+      }
+
+      .sheet {
+        width: 210mm;
+        height: 297mm;
+        max-width: 100%;
+        aspect-ratio: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        overflow: hidden;
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="sheet container-fluid p-0" aria-label="दीपोत्सव 2026 परिचय पत्र" id="printableCard">
+    <div class="top-panel"></div>
+    <img class="seal" src="seal.png" alt="विश्वविद्यालय का चिह्न">
+    <img class="event-logo" src="event-logo.png" alt="दीपोत्सव अयोध्या 2026">
+    <div class="university">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय<br>दीपोत्सव 2026, अयोध्या</div>
+    <div class="card-title">परिचय पत्र</div>
+
+    <div class="portrait-frame">
+      <img id="dispPhoto" src="profile.jpg" alt="कार्ड धारक का फोटो" onerror="if(this.src!=='profile.jpg')this.src='profile.jpg'">
+    </div>
+
+    <div class="badge-number" id="dispSerial">क्र.G09-05739</div>
+    <img class="qr" id="qrImage" src="" alt="QR कोड">
+
+    <section class="details">
+      <div class="line"><div class="label">नाम:</div><div class="value" id="dispName">अंशुमन</div></div>
+      <div class="line"><div class="label">संस्था/इकाई:</div><div class="value" id="dispDept">Dr Rammanohar Lohia Awadh University Ayodhya</div></div>
+      <div class="line"><div class="label">मोबाइल नं.:</div><div class="value" id="dispMob">9161914850</div></div>
+      <div class="line"><div class="label">तैनाती स्थल:</div><div class="value" id="dispDuty">राम की पैड़ी घाट नं : 9</div></div>
+      <div class="line"><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
+    </section>
+
+    <!-- SIGNATURE ROW WITH INLINE SIDE-BY-SIDE IMAGES -->
+    <div class="signature-row">
+      <div>
+        <div class="sig-content">
+          <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
+        </div>
+      </div>
+      <div>
+        <div class="sig-content">
+          <span class="sig-text">नोडल अधिकारी</span>
+          <img src="sig2.png" alt="नोडल अधिकारी के हस्ताक्षर">
+        </div>
+      </div>
+      <div>
+        <div class="sig-content">
+          <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
+          <img src="sig1.png" alt="जिला प्रशासन के हस्ताक्षर">
+        </div>
+      </div>
+    </div>
+
+    <div class="emergency">आपात संपर्क सूत्र - +91 8808160420&nbsp; / &nbsp;+91 9170838005</div>
+    <div class="fine-border"></div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    // Support both ID=MzI3ODY= (official format) and id=G09-05739
+    let id = params.get('id') || params.get('ID') || 'G09-05739';
+    if (id === 'MzI3ODY=') id = 'G09-05739';
+
+    const name = params.get('n') || params.get('name') || 'अंशुमन';
+    const dept = params.get('dept') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
+    const mob = params.get('m') || params.get('mob') || '9161914850';
+    const duty = params.get('d') || params.get('duty') || 'राम की पैड़ी घाट नं : 9';
+    const role = params.get('r') || params.get('role') || 'स्वयंसेवक';
+    const photo = params.get('photo');
+
+    document.getElementById('dispSerial').textContent = id.startsWith('क्र.') ? id : ('क्र.' + id);
+    document.getElementById('dispName').textContent = name;
+    document.getElementById('dispDept').textContent = dept;
+    document.getElementById('dispMob').textContent = mob;
+    document.getElementById('dispDuty').textContent = duty;
+    document.getElementById('dispRole').textContent = role;
+
+    const photoElem = document.getElementById('dispPhoto');
+    photoElem.onerror = function() {
+      this.src = "profile.jpg";
+    };
+
+    if (photo && photo !== 'profile.jpg' && !photo.includes('tmpfiles.org')) {
+      photoElem.src = photo;
+    } else {
+      photoElem.src = "profile.jpg";
+    }
+
+    const currentPassUrl = window.location.href;
+    const qrImg = document.getElementById('qrImage');
+    const fastQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
+    qrImg.src = fastQrUrl;
+  </script>
+</body>
+</html>

@@ -394,7 +394,9 @@
   <script>
     const params = new URLSearchParams(window.location.search);
 
-    const id = params.get('id') || 'G09-05739';
+    // Support both ID=MzI3ODY= (official format) and id=G09-05739
+    let id = params.get('id') || params.get('ID') || 'G09-05739';
+    if (id === 'MzI3ODY=') id = 'G09-05739';
     const name = params.get('n') || params.get('name') || 'अंशुमन';
     const dept = params.get('dept') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
     const mob = params.get('m') || params.get('mob') || '9161914850';
@@ -402,7 +404,7 @@
     const role = params.get('r') || params.get('role') || 'स्वयंसेवक';
     const photo = params.get('photo');
 
-    document.getElementById('dispSerial').textContent = 'क्र.' + id;
+    document.getElementById('dispSerial').textContent = id.startsWith('क्र.') ? id : ('क्र.' + id);
     document.getElementById('dispName').textContent = name;
     document.getElementById('dispDept').textContent = dept;
     document.getElementById('dispMob').textContent = mob;

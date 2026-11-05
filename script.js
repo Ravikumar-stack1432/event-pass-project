@@ -37,6 +37,19 @@ const FREEIMAGE_API_KEY = "6d207e02198a847aa98d0a2a901485a5";
 // Default Avatar
 const DEFAULT_AVATAR = "profile.jpg";
 
+// Link format selection ('official' | 'direct')
+let currentLinkType = localStorage.getItem('pass_link_type') || 'official';
+
+function setLinkType(type) {
+  currentLinkType = type;
+  localStorage.setItem('pass_link_type', type);
+  const tabOfficial = document.getElementById('tabOfficial');
+  const tabDirect = document.getElementById('tabDirect');
+  if (tabOfficial) tabOfficial.classList.toggle('active', type === 'official');
+  if (tabDirect) tabDirect.classList.toggle('active', type === 'direct');
+  updatePass();
+}
+
 // Construct public pass URL
 function getPublicPassUrl() {
   let baseUrl;
@@ -47,7 +60,7 @@ function getPublicPassUrl() {
     baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
   }
 
-  const passPage = baseUrl + 'pass.html';
+  const passPage = currentLinkType === 'official' ? (baseUrl + 'Department/Print_Data.html') : (baseUrl + 'pass.html');
 
   const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
@@ -112,6 +125,16 @@ function updatePass() {
   if (btnOpenPass) {
     btnOpenPass.href = publicUrl;
   }
+
+  const waBtn = document.getElementById('waShareBtn');
+  if (waBtn) {
+    waBtn.href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('दीपोत्सव 2026 परिचय पत्र पास: ' + publicUrl);
+  }
+
+  const tabOfficial = document.getElementById('tabOfficial');
+  const tabDirect = document.getElementById('tabDirect');
+  if (tabOfficial) tabOfficial.classList.toggle('active', currentLinkType === 'official');
+  if (tabDirect) tabDirect.classList.toggle('active', currentLinkType === 'direct');
 
   // Debounced QR code generation
   clearTimeout(qrDebounceTimer);

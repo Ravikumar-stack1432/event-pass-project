@@ -157,6 +157,93 @@
       margin-bottom: 6px;
     }
 
+    /* LINK TYPE SELECTOR */
+    .link-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .link-tab {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .link-tab.active {
+      background: #854d0e;
+      color: white;
+      border-color: #854d0e;
+    }
+
+    .link-tab:hover:not(.active) {
+      background: #f1f5f9;
+    }
+
+    .quick-links-group {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .quick-link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      font-size: 11.5px;
+    }
+
+    .quick-link-item a {
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 250px;
+    }
+
+    .btn-mini {
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      background: #e2e8f0;
+      color: #334155;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .btn-mini:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-wa {
+      background: #25d366;
+      color: white;
+    }
+
+    .btn-wa:hover {
+      background: #1eb956;
+      color: white;
+    }
+
     .share-input-group {
       display: flex;
       gap: 8px;
@@ -637,12 +724,35 @@
 
         <!-- SHAREABLE LINK BOX -->
         <div class="share-box">
-          <label>🔗 Shareable Pass Link (User ko send karne ke liye):</label>
+          <label>🔗 Shareable Pass Link (कस्टम लिंक विकल्प):</label>
+
+          <!-- Format Selector -->
+          <div class="link-tabs">
+            <button type="button" class="link-tab active" id="tabOfficial" onclick="setLinkType('official')">🏛️ Official Replica (/Department/Print_Data)</button>
+            <button type="button" class="link-tab" id="tabDirect" onclick="setLinkType('direct')">📄 Direct Pass (/pass.html)</button>
+          </div>
+
           <div class="share-input-group">
             <input type="text" id="shareableLinkInput" readonly>
             <button type="button" class="btn-copy" onclick="copyShareLink()">📋 Copy Link</button>
           </div>
           <div id="copyFeedback" class="feedback-msg">✓ Link Copied! Share on WhatsApp.</div>
+
+          <!-- Quick Custom Action Links -->
+          <div class="quick-links-group">
+            <div class="quick-link-item">
+              <span>🏛️ <b>Official Route:</b> <a id="quickOfficialLink" target="_blank" href="https://ravikumar-stack1432.github.io/event-pass-project/Department/Print_Data.html?ID=MzI3ODY=">.../Department/Print_Data.html?ID=MzI3ODY=</a></span>
+              <button type="button" class="btn-mini" onclick="copySpecificLink('https://ravikumar-stack1432.github.io/event-pass-project/Department/Print_Data.html?ID=MzI3ODY=')">📋 Copy</button>
+            </div>
+            <div class="quick-link-item">
+              <span>⚡ <b>Short TinyURL:</b> <a id="quickTinyLink" target="_blank" href="https://tinyurl.com/2yebyetl">https://tinyurl.com/2yebyetl</a></span>
+              <button type="button" class="btn-mini" onclick="copySpecificLink('https://tinyurl.com/2yebyetl')">📋 Copy</button>
+            </div>
+            <div class="quick-link-item">
+              <span>💬 <b>WhatsApp Share:</b> डायरेक्ट शेयर करें</span>
+              <a id="waShareBtn" class="btn-mini btn-wa" target="_blank" href="#">📲 WhatsApp</a>
+            </div>
+          </div>
         </div>
 
         <div class="action-row">

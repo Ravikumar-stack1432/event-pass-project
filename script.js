@@ -86,7 +86,7 @@ function updatePass() {
   const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
   const photoVal = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
 
-  if (dispSerial) dispSerial.textContent = 'क्र. ' + idVal;
+  if (dispSerial) dispSerial.textContent = 'क्र.' + idVal;
   if (dispName) dispName.textContent = nameVal;
   if (dispRole) dispRole.textContent = roleVal;
   if (dispDuty) dispDuty.textContent = dutyVal;

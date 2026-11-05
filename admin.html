@@ -817,10 +817,79 @@
       </section>
     </div>
 
-    <!-- SAVED RECORDS DATABASE TABLE -->
-    <div class="saved-records-card">
-      <h2 style="font-size:16px; margin-bottom:6px; color:var(--secondary);">📋 Saved Passes (सभी सुरक्षित किए गए पास)</h2>
-      <p style="font-size:12px; color:#64748b; margin-bottom:12px;">Admin dwara create kiye gaye sabhi pass yahan save rehte hain:</p>
+    <!-- BULK PASS GENERATOR CARD -->
+    <div class="saved-records-card" style="margin-top: 25px; border-top: 4px solid #842b10;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+        <div>
+          <h2 style="font-size:18px; margin:0; color:var(--primary); font-weight:800;">⚡ 100+ Bulk Pass Generator (थोक पास निर्माता)</h2>
+          <p style="font-size:12.5px; color:#64748b; margin:4px 0 0 0;">Ek click me 50 ya 100 passes generate karein — Har pass ka <b>Unique Link & QR Code</b> hoga!</p>
+        </div>
+        <button type="button" class="btn-action" style="flex:0 0 auto; background:#842b10; color:white; padding:8px 16px;" onclick="toggleBulkBox()">
+          ⚙️ Open / Close Bulk Generator
+        </button>
+      </div>
+
+      <div id="bulkGeneratorForm" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:20px;">
+        <div class="grid-row" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+          <div class="form-group">
+            <label for="bulkCount">Passes ki Sankhya (Count)</label>
+            <input type="number" id="bulkCount" value="100" min="1" max="500">
+          </div>
+          <div class="form-group">
+            <label for="bulkPrefix">Pass ID Prefix</label>
+            <input type="text" id="bulkPrefix" value="G09-">
+          </div>
+          <div class="form-group">
+            <label for="bulkStartNum">Starting Number (शुरुआती संख्या)</label>
+            <input type="number" id="bulkStartNum" value="5701">
+          </div>
+          <div class="form-group">
+            <label for="bulkDuty">Duty Location (तैनाती स्थल)</label>
+            <input type="text" id="bulkDuty" value="राम की पैड़ी घाट नं : 9">
+          </div>
+          <div class="form-group">
+            <label for="bulkRole">Role (दायित्व)</label>
+            <input type="text" id="bulkRole" value="स्वयंसेवक">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:8px;">
+          <label for="bulkNames">Names List (Optional - 100 Names paste karein ya khali chhod kar auto-number karein):</label>
+          <textarea id="bulkNames" rows="3" placeholder="Paste names one per line (ek line me ek naam)... agar khali chhodenge toh 'स्वयंसेवक 1', 'स्वयंसेवक 2' auto create hoga" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-family:sans-serif;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+          <button type="button" class="btn-action" style="background:#16a34a; color:white; flex:1 1 250px;" onclick="generateBulkPasses()">
+            ⚡ Generate 100 Unique Passes Now
+          </button>
+          <button type="button" class="btn-action" style="background:#0284c7; color:white; flex:1 1 200px;" onclick="generateSample10Passes()">
+            🚀 Quick 10 Passes (Demo)
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Toolbar for Saved Passes -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #e2e8f0;">
+        <div style="font-size:14px; font-weight:700; color:#1e293b;">
+          Total Saved Passes: <span id="totalPassCountBadge" style="background:#842b10; color:white; padding:2px 8px; border-radius:12px; font-size:12px;">0</span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn-mini" style="background:#15803d; color:white; padding:6px 12px; font-size:12px;" onclick="exportPassesToCSV()">
+            📥 Download Excel (CSV) All Links
+          </button>
+          <button type="button" class="btn-mini" style="background:#0284c7; color:white; padding:6px 12px; font-size:12px;" onclick="copyAllPassLinks()">
+            📋 Copy All Unique Links
+          </button>
+          <a href="bulk-print.html" target="_blank" class="btn-mini" style="background:#6366f1; color:white; padding:6px 12px; font-size:12px;">
+            🖨️ Print All Passes (PDF)
+          </a>
+          <button type="button" class="btn-mini" style="background:#dc2626; color:white; padding:6px 12px; font-size:12px;" onclick="clearAllSavedPasses()">
+            🗑️ Clear All
+          </button>
+        </div>
+      </div>
+
+      <!-- SAVED RECORDS DATABASE TABLE -->
       <div style="overflow-x:auto;">
         <table>
           <thead>
@@ -829,7 +898,7 @@
               <th>नाम (Name)</th>
               <th>दायित्व (Role)</th>
               <th>तैनाती स्थल</th>
-              <th>Actions</th>
+              <th>Unique Pass Link & Actions</th>
             </tr>
           </thead>
           <tbody id="savedPassesTableBody">

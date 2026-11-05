@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deepotsav 2026 - Bulk Pass Print (सभी पास प्रिंट करें)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #334155;
+      font-family: 'Hind', sans-serif;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    .top-controls {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: #0f172a;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .top-controls h1 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .btn-ctrl {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-print { background: #16a34a; color: white; }
+    .btn-print:hover { background: #15803d; }
+    .btn-back { background: #e2e8f0; color: #1e293b; }
+    .btn-back:hover { background: #cbd5e1; }
+
+    .print-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      gap: 30px;
+    }
+
+    .sheet {
+      position: relative;
+      width: min(210mm, 100%);
+      max-width: 530px;
+      aspect-ratio: 210 / 297;
+      margin: 0 auto;
+      padding: 0;
+      background-color: #ffffce;
+      background-image: linear-gradient(
+        to right,
+        #e9cf84 0%,
+        #ffffce 50%,
+        #ebd184 100%
+      );
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      container-type: inline-size;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .top-panel {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 31.5%;
+      background: radial-gradient(
+        circle at top center,
+        #fff8b0 0%,
+        #ffe771 50%,
+        #e5aa02 100%
+      );
+      clip-path: polygon(0 0, 100% 0, 100% 67%, 50% 100%, 0 67%);
+      z-index: 1;
+    }
+
+    .top-panel::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40%;
+      background: repeating-linear-gradient(
+        55deg,
+        #992c14 0 2.2mm,
+        #f4bd0c 2.2mm 4.4mm
+      );
+      clip-path: polygon(0 0, 50% 100%, 100% 0, 100% 24%, 50% 100%, 0 24%);
+    }
+
+    .seal {
+      position: absolute;
+      z-index: 3;
+      left: 8.7%;
+      top: 2.2%;
+      width: 17%;
+      height: 10.7%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .event-logo {
+      position: absolute;
+      z-index: 3;
+      right: 8%;
+      top: 2%;
+      width: 28%;
+      height: 11.2%;
+      object-fit: contain;
+    }
+
+    .university {
+      position: absolute;
+      z-index: 3;
+      left: 2%;
+      right: 2%;
+      top: 14.5%;
+      text-align: center;
+      color: #842b10;
+      font-weight: 800;
+      font-size: clamp(10px, 3.8cqw, 28px);
+      line-height: 1.25;
+      text-shadow: 0 1px 0 #f3d76b;
+      white-space: nowrap;
+    }
+
+    .card-title {
+      position: absolute;
+      z-index: 3;
+      left: 20%;
+      right: 20%;
+      top: 22.8%;
+      height: 5.6%;
+      background: #c19d38;
+      clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fdf6d8;
+      font-weight: 700;
+      font-size: clamp(10px, 3.8cqw, 28px);
+      letter-spacing: 0.8px;
+      text-shadow: 0 1px 1px #76632c;
+    }
+
+    .portrait-frame {
+      position: absolute;
+      z-index: 4;
+      left: 34.5%;
+      top: 27.2%;
+      width: 31%;
+      height: 23.4%;
+      background: #fffffc;
+      border: 3.5px solid #d4af37;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .portrait-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .badge-number {
+      position: absolute;
+      z-index: 4;
+      right: 8%;
+      top: 31.8%;
+      width: 25%;
+      font-weight: 800;
+      font-size: clamp(11px, 3.4cqw, 24px);
+      color: #000;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .qr {
+      position: absolute;
+      z-index: 4;
+      right: 8%;
+      top: 35.8%;
+      width: 25%;
+      aspect-ratio: 1 / 1;
+      border: 2px solid #576574;
+      background: #fff;
+      padding: 1.5%;
+      object-fit: contain;
+    }
+
+    .details {
+      position: absolute;
+      z-index: 4;
+      left: 20%;
+      right: 9%;
+      top: 53.5%;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(7px, 2.1cqw, 15px);
+      font-size: clamp(11px, 3.45cqw, 25px);
+      line-height: 1.25;
+      color: #000;
+    }
+
+    .details .line {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .details .label {
+      flex: 0 0 40%;
+      font-weight: 700;
+      color: #000;
+      white-space: nowrap;
+    }
+
+    .details .value {
+      flex: 1;
+      min-width: 0;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .signature-row {
+      position: absolute;
+      z-index: 4;
+      left: 0;
+      bottom: 4.5%;
+      width: 100%;
+      height: 38px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 2px solid #972626;
+      border-bottom: 1px solid #a68c3d;
+      background: linear-gradient(180deg, #ffcc00 0%, #fffbbf 50%, #e6ab00 100%);
+      color: #302b20;
+      align-items: center;
+    }
+
+    .signature-row > div {
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #972626;
+      padding: 1px 4px;
+    }
+
+    .signature-row > div:last-child {
+      border-right: none;
+    }
+
+    .sig-content {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .sig-text {
+      font-size: clamp(8px, 1.9cqw, 13.5px);
+      font-weight: 700;
+      line-height: 1.15;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .sig-content img {
+      display: block;
+      height: 25px;
+      width: auto;
+      max-width: 55px;
+      object-fit: contain;
+    }
+
+    .emergency {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 4.5%;
+      background: #b92a31;
+      color: #fff3dc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 500;
+      font-size: clamp(9px, 3.3cqw, 28px);
+      white-space: nowrap;
+      padding: 0 1%;
+    }
+
+    .fine-border {
+      position: absolute;
+      inset: 1.5mm;
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    @media print {
+      .top-controls {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+        padding: 0 !important;
+      }
+      .print-container {
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      .sheet {
+        width: 210mm !important;
+        height: 297mm !important;
+        max-width: 100% !important;
+        aspect-ratio: auto !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-controls">
+    <div>
+      <h1>🖨️ Bulk Passes Print View (<span id="passCountDisp">0</span> Passes)</h1>
+      <small style="color: #94a3b8;">Har pass alag A4 page par print hoga with Unique QR Code & ID</small>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <a href="admin.html" class="btn-ctrl btn-back">⬅️ Back to Admin</a>
+      <button onclick="window.print()" class="btn-ctrl btn-print">🖨️ Print All Passes (PDF)</button>
+    </div>
+  </div>
+
+  <div class="print-container" id="passContainer">
+    <div style="color:white; padding:40px; text-align:center;">Passes load ho rahe hain...</div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      let list = [];
+      try {
+        list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+      } catch (e) { list = []; }
+
+      const countDisp = document.getElementById('passCountDisp');
+      const container = document.getElementById('passContainer');
+
+      if (countDisp) countDisp.textContent = list.length;
+
+      if (!list || list.length === 0) {
+        container.innerHTML = `
+          <div style="color:white; text-align:center; padding:50px;">
+            <h3>Koi saved pass nahi mila.</h3>
+            <p>Admin panel me jakar "⚡ Generate 100 Passes" karein aur phir yahan aakar print karein.</p>
+            <a href="admin.html" class="btn-ctrl btn-back" style="margin-top:15px; display:inline-block;">Admin Portal par jayein</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map((item, idx) => {
+        const idVal = item.id || ('G09-' + (5700 + idx));
+        const nameVal = item.name || 'स्वयंसेवक ' + (idx + 1);
+        const roleVal = item.role || 'स्वयंसेवक';
+        const dutyVal = item.duty || 'राम की पैड़ी घाट नं : 9';
+        const mobVal = item.mob || '9161914850';
+        const deptVal = item.dept || 'Dr Rammanohar Lohia Awadh University Ayodhya';
+        const photoVal = item.photo || 'profile.jpg';
+        const passLink = item.link || `https://deeputsav-rmlau-online2026.github.io/event-pass-project/Department/Print_Data.html?id=${encodeURIComponent(idVal)}&n=${encodeURIComponent(nameVal)}&r=${encodeURIComponent(roleVal)}&d=${encodeURIComponent(dutyVal)}&m=${encodeURIComponent(mobVal)}`;
+
+        const qrSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(passLink);
+
+        return `
+          <main class="sheet" id="pass-card-${idx}">
+            <div class="top-panel"></div>
+            <img class="seal" src="Department/seal.png" alt="University Seal">
+            <img class="event-logo" src="Department/event-logo.png" alt="Deepotsav Logo">
+            <div class="university">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय<br>दीपोत्सव 2026, अयोध्या</div>
+            <div class="card-title">परिचय पत्र</div>
+
+            <div class="portrait-frame">
+              <img src="${photoVal}" alt="${nameVal}" onerror="this.src='profile.jpg'">
+            </div>
+
+            <div class="badge-number">क्र.${idVal.startsWith('क्र.') ? idVal.replace('क्र.','') : idVal}</div>
+            <img class="qr" src="${qrSrc}" alt="QR Code">
+
+            <section class="details">
+              <div class="line"><div class="label">नाम:</div><div class="value">${nameVal}</div></div>
+              <div class="line"><div class="label">संस्था/इकाई:</div><div class="value">${deptVal}</div></div>
+              <div class="line"><div class="label">मोबाइल नं.:</div><div class="value">${mobVal}</div></div>
+              <div class="line"><div class="label">तैनाती स्थल:</div><div class="value">${dutyVal}</div></div>
+              <div class="line"><div class="label">दायित्व:</div><div class="value">${roleVal}</div></div>
+            </section>
+
+            <div class="signature-row">
+              <div>
+                <div class="sig-content">
+                  <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>संस्था/इकाई</span>
+                </div>
+              </div>
+              <div>
+                <div class="sig-content">
+                  <span class="sig-text">नोडल अधिकारी</span>
+                  <img src="Department/sig2.png" alt="नोडल अधिकारी">
+                </div>
+              </div>
+              <div>
+                <div class="sig-content">
+                  <span class="sig-text">प्राधिकृत हस्ताक्षरी<br>जिला प्रशासन</span>
+                  <img src="Department/sig1.png" alt="जिला प्रशासन">
+                </div>
+              </div>
+            </div>
+
+            <div class="emergency">आपात संपर्क सूत्र - +91 8808160420&nbsp; / &nbsp;+91 9170838005</div>
+            <div class="fine-border"></div>
+          </main>
+        `;
+      }).join('');
+    });
+  </script>
+</body>
+</html>

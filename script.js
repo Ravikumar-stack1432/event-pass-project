@@ -356,6 +356,165 @@ function savePassRecord() {
   alert(`✅ Pass [${passId} - ${nameVal}] successfully save ho gaya aur link copy ho gaya!`);
 }
 
+// Toggle Bulk Box
+function toggleBulkBox() {
+  const form = document.getElementById('bulkGeneratorForm');
+  if (form) {
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+// BULK 100 PASS GENERATOR
+function generateBulkPasses() {
+  const countInp = document.getElementById('bulkCount');
+  const count = parseInt(countInp ? countInp.value : 100, 10) || 100;
+  const prefix = (document.getElementById('bulkPrefix')?.value || 'G09-').trim();
+  const startNum = parseInt(document.getElementById('bulkStartNum')?.value || 5701, 10) || 5701;
+  const duty = (document.getElementById('bulkDuty')?.value || 'राम की पैड़ी घाट नं : 9').trim();
+  const role = (document.getElementById('bulkRole')?.value || 'स्वयंसेवक').trim();
+  const namesRaw = document.getElementById('bulkNames')?.value || '';
+  const namesList = namesRaw.split('\n').map(n => n.trim()).filter(Boolean);
+
+  let baseUrl;
+  if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseUrl = LIVE_BASE_URL;
+  } else {
+    const currentUrl = window.location.href.split('?')[0].split('#')[0];
+    baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+  }
+
+  const passPage = currentLinkType === 'official' ? (baseUrl + 'Department/Print_Data.html') : (baseUrl + 'pass.html');
+  const dept = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+  } catch (e) { list = []; }
+
+  const newPasses = [];
+  for (let i = 0; i < count; i++) {
+    const num = startNum + i;
+    const passId = prefix + num;
+    const name = namesList[i] || (`स्वयंसेवक ${i + 1}`);
+    const mob = '9161914850';
+
+    const params = new URLSearchParams({
+      id: passId,
+      n: name,
+      r: role,
+      d: duty,
+      m: mob
+    });
+    if (dept && dept !== 'Dr Rammanohar Lohia Awadh University Ayodhya') {
+      params.set('dept', dept);
+    }
+
+    const uniqueUrl = `${passPage}?${params.toString()}`;
+
+    newPasses.push({
+      id: passId,
+      name: name,
+      role: role,
+      duty: duty,
+      mob: mob,
+      dept: dept,
+      photo: DEFAULT_AVATAR,
+      link: uniqueUrl,
+      savedAt: new Date().toLocaleTimeString('en-IN')
+    });
+  }
+
+  // Prepend or merge
+  list = newPasses.concat(list);
+  localStorage.setItem('all_saved_passes', JSON.stringify(list));
+  renderSavedPassesTable();
+
+  alert(`🎉 Zabardast! ${count} passes successfully generate ho gaye hain!\nHar pass ka alag UNIQUE LINK aur QR CODE ready hai.\n\nAap "Download Excel (CSV)" ya "Print All Passes" par click kar sakte hain.`);
+}
+
+// Generate 10 Sample Passes for quick demo
+function generateSample10Passes() {
+  const sampleNames = [
+    'अंशुमन सिंह', 'राहुल वर्मा', 'अमित कुमार यादव', 'रोहित सिंह', 'अंकित गुप्ता',
+    'मनीष यादव', 'संदीप तिवारी', 'प्रदीप मिश्रा', 'आशीष चौहान', 'दीपक पांडे'
+  ];
+  const namesBox = document.getElementById('bulkNames');
+  const countBox = document.getElementById('bulkCount');
+  if (namesBox) namesBox.value = sampleNames.join('\n');
+  if (countBox) countBox.value = 10;
+  generateBulkPasses();
+}
+
+// EXPORT ALL SAVED PASSES TO EXCEL (CSV)
+function exportPassesToCSV() {
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+  } catch (e) { list = []; }
+
+  if (list.length === 0) {
+    alert("Koi pass save nahi hai. Pehle '⚡ Generate 100 Unique Passes' click karein.");
+    return;
+  }
+
+  let csvContent = "\uFEFFक्र. सं.,पास आईडी (Pass ID),नाम (Name),दायित्व (Role),तैनाती स्थल (Duty),मोबाइल नं.,यूनिक पास लिंक (Unique Link),WhatsApp Direct Link\n";
+
+  list.forEach((item, idx) => {
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent('दीपोत्सव 2026 परिचय पत्र पास: ' + item.link)}`;
+    const row = [
+      idx + 1,
+      `"${item.id}"`,
+      `"${item.name}"`,
+      `"${item.role}"`,
+      `"${item.duty}"`,
+      `"${item.mob}"`,
+      `"${item.link}"`,
+      `"${waUrl}"`
+    ];
+    csvContent += row.join(',') + '\n';
+  });
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `Deeputsav_${list.length}_Passes_Unique_Links.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// COPY ALL PASS LINKS AS TEXT LIST
+function copyAllPassLinks() {
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
+  } catch (e) { list = []; }
+
+  if (list.length === 0) {
+    alert("Koi pass save nahi hai.");
+    return;
+  }
+
+  const text = list.map((item, idx) => `${idx + 1}. [${item.id}] ${item.name} (${item.duty}) -> ${item.link}`).join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert(`✅ Sabhi ${list.length} passes ke unique links clipboard me copy ho gaye!`);
+    }).catch(() => {
+      prompt("Copy all links:", text);
+    });
+  } else {
+    prompt("Copy all links:", text);
+  }
+}
+
+// CLEAR ALL SAVED PASSES
+function clearAllSavedPasses() {
+  if (!confirm("Kya aap sach me sabhi saved passes ko clear karna chahte hain?")) return;
+  localStorage.removeItem('all_saved_passes');
+  renderSavedPassesTable();
+}
+
 // Render Saved Passes Table
 function renderSavedPassesTable() {
   if (!savedPassesTableBody) return;
@@ -364,25 +523,32 @@ function renderSavedPassesTable() {
     list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
   } catch (e) { list = []; }
 
+  const badge = document.getElementById('totalPassCountBadge');
+  if (badge) badge.textContent = list.length;
+
   if (list.length === 0) {
-    savedPassesTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:14px;">Abhi koi pass save nahi hai. Form bhar kar "💾 Save Pass" click karein.</td></tr>`;
+    savedPassesTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:18px;">Abhi koi pass save nahi hai. Form bhar kar "💾 Save Pass" ya upar se "⚡ 100+ Bulk Pass Generator" use karein.</td></tr>`;
     return;
   }
 
-  savedPassesTableBody.innerHTML = list.map((item, idx) => `
-    <tr>
-      <td><strong>${item.id}</strong></td>
-      <td>${item.name}</td>
-      <td>${item.role}</td>
-      <td>${item.duty}</td>
-      <td style="white-space:nowrap;">
-        <button onclick="loadPassToForm(${idx})" style="background:#0284c7; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700;">✏️ Edit</button>
-        <a href="${item.link}" target="_blank" style="background:#2563eb; color:white; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700; margin-left:4px;">👁️ View</a>
-        <button onclick="copySpecificLink('${item.link}')" style="background:#16a34a; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:4px;">📋 Copy</button>
-        <button onclick="deletePassRecord(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:4px;">🗑️</button>
-      </td>
-    </tr>
-  `).join('');
+  savedPassesTableBody.innerHTML = list.map((item, idx) => {
+    const waLink = `https://api.whatsapp.com/send?text=${encodeURIComponent('दीपोत्सव 2026 परिचय पत्र पास: ' + item.link)}`;
+    return `
+      <tr>
+        <td><strong>${item.id}</strong></td>
+        <td>${item.name}</td>
+        <td>${item.role}</td>
+        <td>${item.duty}</td>
+        <td style="white-space:nowrap;">
+          <a href="${item.link}" target="_blank" style="background:#2563eb; color:white; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700;">👁️ View</a>
+          <button onclick="copySpecificLink('${item.link}')" style="background:#16a34a; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:3px;">📋 Copy Link</button>
+          <a href="${waLink}" target="_blank" style="background:#25d366; color:white; text-decoration:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700; margin-left:3px;">📲 WhatsApp</a>
+          <button onclick="loadPassToForm(${idx})" style="background:#0284c7; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:3px;">✏️</button>
+          <button onclick="deletePassRecord(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; font-weight:700; margin-left:3px;">🗑️</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 // Load a saved pass back into the form

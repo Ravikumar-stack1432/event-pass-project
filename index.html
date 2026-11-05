@@ -488,8 +488,11 @@
         <!-- Photo & Avatar Picker -->
         <div class="form-group">
           <label>Photo URL (फोटो लिंक या नीचे से चुनें)</label>
-          <input type="text" id="inputPhotoUrl" value="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80">
+          <input type="text" id="inputPhotoUrl" value="profile.jpg">
           <div class="avatar-picker">
+            <button type="button" class="avatar-btn" style="border: 2px solid #9c1511;" title="Uploaded Avatar" onclick="setAvatar('profile.jpg')">
+              <img src="profile.jpg" alt="Uploaded Avatar">
+            </button>
             <button type="button" class="avatar-btn" title="Avatar 1" onclick="setAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80')">
               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80" alt="Avatar 1">
             </button>
@@ -541,7 +544,7 @@
 
           <div class="center-section">
             <div class="photo-frame">
-              <img id="dispPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80" alt="Pass Photo" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80'">
+              <img id="dispPhoto" src="profile.jpg" alt="Pass Photo" onerror="this.src='profile.jpg'">
             </div>
 
             <div class="qr-column">

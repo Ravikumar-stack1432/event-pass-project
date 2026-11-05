@@ -35,7 +35,7 @@ let qrDebounceTimer = null;
 const FREEIMAGE_API_KEY = "6d207e02198a847aa98d0a2a901485a5";
 
 // Default Avatar
-const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80";
+const DEFAULT_AVATAR = "profile.jpg";
 
 // Construct public pass URL
 function getPublicPassUrl() {
@@ -93,8 +93,8 @@ function updatePass() {
   if (dispMob) dispMob.textContent = mobVal;
   if (dispDept) dispDept.textContent = deptVal;
 
-  if (photoVal && dispPhoto) {
-    dispPhoto.src = photoVal;
+  if (dispPhoto) {
+    dispPhoto.src = photoVal || 'profile.jpg';
   }
 
   const publicUrl = getPublicPassUrl();

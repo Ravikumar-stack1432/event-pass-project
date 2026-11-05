@@ -234,7 +234,7 @@
     <!-- Center: Photo & QR -->
     <div class="center-section">
       <div class="photo-frame">
-        <img id="dispPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80" alt="Pass Photo">
+        <img id="dispPhoto" src="profile.jpg" alt="Pass Photo">
       </div>
 
       <div class="qr-column">
@@ -317,16 +317,13 @@
     // Photo
     const photoElem = document.getElementById('dispPhoto');
     photoElem.onerror = function() {
-      this.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=240&auto=format&fit=crop&q=80";
+      this.src = "profile.jpg";
     };
 
-    if (photo) {
+    if (photo && photo !== 'profile.jpg') {
       photoElem.src = photo;
     } else {
-      const savedPhoto = localStorage.getItem('pass_photo_' + id) || localStorage.getItem('latest_uploaded_photo') || localStorage.getItem('local_pass_photo');
-      if (savedPhoto) {
-        photoElem.src = savedPhoto;
-      }
+      photoElem.src = "profile.jpg";
     }
 
     // Generate High-Contrast, Instant-Scan QR Code

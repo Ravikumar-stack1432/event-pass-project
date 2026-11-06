@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "cleanUrls": true,
   "routes": [
     {
       "src": "^/Department/Print_Data(.*)",
@@ -8,6 +9,14 @@
     {
       "src": "^/admin(.*)",
       "dest": "/admin.html$1"
+    },
+    {
+      "src": "^/scanner(.*)",
+      "dest": "/scanner.html$1"
+    },
+    {
+      "src": "^/bulk-print(.*)",
+      "dest": "/bulk-print.html$1"
     },
     {
       "src": "^/pass(.*)",
@@ -19,4 +28,3 @@
     }
   ]
 }
-

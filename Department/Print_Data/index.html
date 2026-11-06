@@ -502,7 +502,7 @@
         <div class="fine-border"></div>
     </main>
 
-    <script>
+        <script>
         const params = new URLSearchParams(window.location.search);
 
         let id = params.get('id') || params.get('ID') || 'G09-05739';
@@ -512,6 +512,24 @@
         let duty = params.get('d') || params.get('duty');
         let role = params.get('r') || params.get('role');
         let photo = params.get('photo');
+
+        // Check if ID or data is a base64 encoded JSON string
+        try {
+            const rawParam = params.get('data') || params.get('ID') || params.get('id');
+            if (rawParam && rawParam.length > 20 && !rawParam.startsWith('G09-') && rawParam !== 'MzI3ODY=') {
+                const decoded = decodeURIComponent(escape(atob(rawParam)));
+                const parsed = JSON.parse(decoded);
+                if (parsed && typeof parsed === 'object') {
+                    if (parsed.id) id = parsed.id;
+                    if (parsed.n || parsed.name) name = parsed.n || parsed.name;
+                    if (parsed.m || parsed.mob) mob = parsed.m || parsed.mob;
+                    if (parsed.d || parsed.duty) duty = parsed.d || parsed.duty;
+                    if (parsed.r || parsed.role) role = parsed.r || parsed.role;
+                    if (parsed.dept) dept = parsed.dept;
+                    if (parsed.photo) photo = parsed.photo;
+                }
+            }
+        } catch(e) {}
 
         function applyPassData(pId, pName, pDept, pMob, pDuty, pRole, pPhoto) {
             document.getElementById('dispSerial').textContent = pId.startsWith('क्र.') ? pId : ('क्र.' + pId);
@@ -540,7 +558,7 @@
         async function initPass() {
             applyPassData(id, name, dept, mob, duty, role, photo);
 
-            if (!name || !photo || id === 'MzI3ODY=' || id === 'G09-05873' || id === 'G09-05739') {
+            if (!name || id === 'MzI3ODY=' || id === 'G09-05873' || id === '32786') {
                 let registry = {};
                 try {
                     const res = await fetch('passes.json');

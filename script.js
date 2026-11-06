@@ -1,5 +1,5 @@
-// Live Base URL for GitHub Pages
-const LIVE_BASE_URL = "https://deeputsav-rmlau-online2026.github.io/event-pass-project/";
+// Live Base URL for Vercel
+const LIVE_BASE_URL = "https://deeputsav-rmlau-2026.vercel.app/";
 
 // Form Elements
 const inputPassId = document.getElementById('inputPassId');
@@ -55,14 +55,13 @@ function setLinkType(type) {
 // Construct public pass URL
 function getPublicPassUrl() {
   let baseUrl;
-  if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  if (window.location.protocol === 'file:') {
     baseUrl = LIVE_BASE_URL;
   } else {
-    const currentUrl = window.location.href.split('?')[0].split('#')[0];
-    baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+    baseUrl = window.location.origin + '/';
   }
 
-  const passPage = currentLinkType === 'direct' ? (baseUrl + 'pass.html') : (baseUrl + 'Department/Print_Data.html');
+  const passPage = currentLinkType === 'direct' ? (baseUrl + 'pass.html') : (baseUrl + 'Department/Print_Data');
   const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
 
   // Super Short Link Mode (Only ?id=...)
@@ -152,15 +151,16 @@ function updatePass() {
     }
   }
 
-    const quickVercelLink = document.getElementById('quickVercelLink');
+  const baseUrl = (window.location.protocol === 'file:') ? LIVE_BASE_URL : (window.location.origin + '/');
+  const quickVercelLink = document.getElementById('quickVercelLink');
   if (quickVercelLink) {
-    const vercelUrl = 'https://deeputsav-rmlau-2026.vercel.app/Department/Print_Data?id=' + encodeURIComponent(idVal);
+    const vercelUrl = `${baseUrl}Department/Print_Data?id=${encodeURIComponent(idVal)}`;
     quickVercelLink.href = vercelUrl;
     quickVercelLink.textContent = vercelUrl;
   }
   const quickOfficialLink = document.getElementById('quickOfficialLink');
   if (quickOfficialLink) {
-    const officialUrl = 'https://deeputsav-rmlau-online2026.github.io/event-pass-project/Department/Print_Data.html?id=' + encodeURIComponent(idVal);
+    const officialUrl = `${baseUrl}Department/Print_Data?ID=${encodeURIComponent(idVal)}`;
     quickOfficialLink.href = officialUrl;
     quickOfficialLink.textContent = officialUrl;
   }
@@ -423,14 +423,13 @@ function generateBulkPasses() {
   const namesList = namesRaw.split('\n').map(n => n.trim()).filter(Boolean);
 
   let baseUrl;
-  if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  if (window.location.protocol === 'file:') {
     baseUrl = LIVE_BASE_URL;
   } else {
-    const currentUrl = window.location.href.split('?')[0].split('#')[0];
-    baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+    baseUrl = window.location.origin + '/';
   }
 
-  const passPage = currentLinkType === 'official' ? (baseUrl + 'Department/Print_Data.html') : (baseUrl + 'pass.html');
+  const passPage = currentLinkType === 'official' ? (baseUrl + 'Department/Print_Data') : (baseUrl + 'pass.html');
   const dept = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
 
   let list = [];

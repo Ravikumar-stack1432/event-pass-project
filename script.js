@@ -52,7 +52,7 @@ function setLinkType(type) {
   updatePass();
 }
 
-// Construct public pass URL
+// Construct public pass URL (Always unique, clean, and opens on any device)
 function getPublicPassUrl() {
   let baseUrl;
   if (window.location.protocol === 'file:') {
@@ -61,38 +61,14 @@ function getPublicPassUrl() {
     baseUrl = window.location.origin + '/';
   }
 
-  const passPage = currentLinkType === 'direct' ? (baseUrl + 'pass.html') : (baseUrl + 'Department/Print_Data');
   const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
 
-  // Super Short Link Mode (Only ?id=...)
-  if (currentLinkType === 'short_id') {
-    return `${passPage}?id=${encodeURIComponent(idVal)}`;
+  if (currentLinkType === 'direct') {
+    return `${baseUrl}pass.html?id=${encodeURIComponent(idVal)}`;
   }
 
-  const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
-  const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
-  const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
-  const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
-  const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
-
-  const params = new URLSearchParams({
-    id: idVal,
-    n: nameVal,
-    r: roleVal,
-    d: dutyVal,
-    m: mobVal
-  });
-
-  if (deptVal && deptVal !== 'Dr Rammanohar Lohia Awadh University Ayodhya') {
-    params.set('dept', deptVal);
-  }
-
-  const photoUrl = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
-  if (photoUrl && photoUrl !== 'profile.jpg' && !photoUrl.startsWith('data:image') && !photoUrl.includes('tmpfiles.org')) {
-    params.set('photo', photoUrl);
-  }
-
-  return `${passPage}?${params.toString()}`;
+  // Official and Short both use the clean unique URL format
+  return `${baseUrl}Department/Print_Data?id=${encodeURIComponent(idVal)}`;
 }
 
 // Make TinyURL short link directly from UI
@@ -363,8 +339,8 @@ function restoreFormState() {
   }
 }
 
-// Save Pass Record to Database
-function savePassRecord() {
+// Save Pass Record to Local Storage & Cloud Database
+async function savePassRecord() {
   const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
   const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
@@ -372,6 +348,9 @@ function savePassRecord() {
   const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
   const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
   const photoVal = (inputPhotoUrl ? inputPhotoUrl.value.trim() : '') || DEFAULT_AVATAR;
+
+  const baseUrl = (window.location.protocol === 'file:') ? LIVE_BASE_URL : (window.location.origin + '/');
+  const uniqueUrl = `${baseUrl}Department/Print_Data?id=${encodeURIComponent(passId)}`;
 
   const record = {
     id: passId,
@@ -381,10 +360,11 @@ function savePassRecord() {
     mob: mobVal,
     dept: deptVal,
     photo: photoVal,
-    link: getPublicPassUrl(),
+    link: uniqueUrl,
     savedAt: new Date().toLocaleTimeString('en-IN')
   };
 
+  // 1. Save locally
   let list = [];
   try {
     list = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
@@ -399,8 +379,21 @@ function savePassRecord() {
 
   localStorage.setItem('all_saved_passes', JSON.stringify(list));
   renderSavedPassesTable();
-  copyShareLink();
-  alert(`✅ Pass [${passId} - ${nameVal}] successfully save ho gaya aur link copy ho gaya!`);
+
+  // 2. Sync to Cloud Database (kvdb.io) so ANY phone / QR scanner loads it anywhere
+  try {
+    await fetch('https://kvdb.io/LbsybqpqrX2F5v7kjFiA2a/' + encodeURIComponent(passId), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record)
+    });
+  } catch (err) {
+    console.warn('Cloud sync error:', err);
+  }
+
+  updatePass();
+  copySpecificLink(uniqueUrl);
+  alert(`🎉 Pass [${passId} - ${nameVal}] Cloud par Save ho gaya!\n\n🔗 Unique Pass URL:\n${uniqueUrl}\n\nQR Code bhi isi unique link se generate ho chuka hai!`);
 }
 
 // Toggle Bulk Box

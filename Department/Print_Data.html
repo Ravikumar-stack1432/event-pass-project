@@ -502,7 +502,7 @@
         <div class="fine-border"></div>
     </main>
 
-        <script>
+            <script>
         const params = new URLSearchParams(window.location.search);
 
         let id = params.get('id') || params.get('ID') || 'G09-05739';
@@ -512,24 +512,6 @@
         let duty = params.get('d') || params.get('duty');
         let role = params.get('r') || params.get('role');
         let photo = params.get('photo');
-
-        // Check if ID or data is a base64 encoded JSON string
-        try {
-            const rawParam = params.get('data') || params.get('ID') || params.get('id');
-            if (rawParam && rawParam.length > 20 && !rawParam.startsWith('G09-') && rawParam !== 'MzI3ODY=') {
-                const decoded = decodeURIComponent(escape(atob(rawParam)));
-                const parsed = JSON.parse(decoded);
-                if (parsed && typeof parsed === 'object') {
-                    if (parsed.id) id = parsed.id;
-                    if (parsed.n || parsed.name) name = parsed.n || parsed.name;
-                    if (parsed.m || parsed.mob) mob = parsed.m || parsed.mob;
-                    if (parsed.d || parsed.duty) duty = parsed.d || parsed.duty;
-                    if (parsed.r || parsed.role) role = parsed.r || parsed.role;
-                    if (parsed.dept) dept = parsed.dept;
-                    if (parsed.photo) photo = parsed.photo;
-                }
-            }
-        } catch(e) {}
 
         function applyPassData(pId, pName, pDept, pMob, pDuty, pRole, pPhoto) {
             document.getElementById('dispSerial').textContent = pId.startsWith('क्र.') ? pId : ('क्र.' + pId);
@@ -550,41 +532,66 @@
                 photoElem.src = "profile.jpg";
             }
 
-            const currentPassUrl = window.location.href;
+            // Clean Unique Pass URL for the QR code
+            const cleanPassId = pId.replace(/^क्र./, '');
+            const cleanUrl = window.location.origin + '/Department/Print_Data?id=' + encodeURIComponent(cleanPassId);
             const qrImg = document.getElementById('qrImage');
-            qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(currentPassUrl);
+            qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=2&data=' + encodeURIComponent(cleanUrl);
         }
 
         async function initPass() {
+            // Apply initial params
             applyPassData(id, name, dept, mob, duty, role, photo);
 
-            if (!name || id === 'MzI3ODY=' || id === 'G09-05873' || id === '32786') {
-                let registry = {};
-                try {
-                    const res = await fetch('passes.json');
-                    if (res.ok) registry = await res.json();
-                } catch(e) {
-                    try {
-                        const res2 = await fetch('../passes.json');
-                        if (res2.ok) registry = await res2.json();
-                    } catch(e2) {}
-                }
+            let foundData = null;
 
+            // 1. Check local passes.json
+            try {
+                const res = await fetch('passes.json');
+                if (res.ok) {
+                    const registry = await res.json();
+                    if (registry[id]) foundData = registry[id];
+                }
+            } catch(e) {
+                try {
+                    const res2 = await fetch('../passes.json');
+                    if (res2.ok) {
+                        const registry2 = await res2.json();
+                        if (registry2[id]) foundData = registry2[id];
+                    }
+                } catch(e2) {}
+            }
+
+            // 2. If not found in passes.json, fetch from Cloud Database (kvdb.io)
+            if (!foundData) {
+                try {
+                    const cloudRes = await fetch('https://kvdb.io/LbsybqpqrX2F5v7kjFiA2a/' + encodeURIComponent(id));
+                    if (cloudRes.ok) {
+                        const cloudData = await cloudRes.json();
+                        if (cloudData && (cloudData.name || cloudData.id)) {
+                            foundData = cloudData;
+                        }
+                    }
+                } catch(err) {}
+            }
+
+            // 3. Fallback to localStorage if available on current device
+            if (!foundData) {
                 try {
                     const saved = JSON.parse(localStorage.getItem('all_saved_passes')) || [];
-                    saved.forEach(p => { if (p.id) registry[p.id] = p; });
+                    const localMatch = saved.find(p => p.id === id);
+                    if (localMatch) foundData = localMatch;
                 } catch(e) {}
+            }
 
-                const matched = registry[id];
-                if (matched) {
-                    name = name || matched.name;
-                    dept = dept || matched.dept;
-                    mob = mob || matched.mob;
-                    duty = duty || matched.duty;
-                    role = role || matched.role;
-                    photo = photo || matched.photo;
-                    applyPassData(id, name, dept, mob, duty, role, photo);
-                }
+            if (foundData) {
+                name = name || foundData.name;
+                dept = dept || foundData.dept;
+                mob = mob || foundData.mob;
+                duty = duty || foundData.duty;
+                role = role || foundData.role;
+                photo = photo || foundData.photo;
+                applyPassData(id, name, dept, mob, duty, role, photo);
             }
         }
 

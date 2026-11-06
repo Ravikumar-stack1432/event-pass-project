@@ -476,12 +476,12 @@
         <div class="university">डॉ. राममनोहर लोहिया अवध विश्वविद्यालय<br>दीपोत्सव 2026, अयोध्या</div>
         <div class="card-title">परिचय पत्र</div>
         <div class="portrait-frame"><img id="dispPhoto" src="profile.jpg" alt="कार्ड धारक का फोटो" onerror="if(this.src!=='profile.jpg')this.src='profile.jpg'"></div>
-        <div class="badge-number" id="dispSerial">क्र.G09-05739</div>
+        <div class="badge-number" id="dispSerial">&nbsp;</div>
         <img class="qr" id="qrImage" src="" alt="QR कोड">
         <section class="details">
-            <div class="line"><div class="label">नाम:</div><div class="value" id="dispName">अंशुमन</div></div>
+            <div class="line"><div class="label">नाम:</div><div class="value" id="dispName">&nbsp;</div></div>
             <div class="line"><div class="label">संस्था/इकाई:</div><div class="value" id="dispDept">Dr Rammanohar Lohia Awadh University Ayodhya </div></div>
-            <div class="line"><div class="label">मोबाइल नं.:</div><div class="value" id="dispMob">9161914850</div></div>
+            <div class="line"><div class="label">मोबाइल नं.:</div><div class="value" id="dispMob">&nbsp;</div></div>
             <div class="line"><div class="label">तैनाती स्थल:</div><div class="value" id="dispDuty">राम की पैड़ी घाट नं : 9</div></div>
             <div class="line "><div class="label">दायित्व:</div><div class="value" id="dispRole">स्वयंसेवक</div></div>
         </section> 
@@ -505,7 +505,7 @@
             <script>
         const params = new URLSearchParams(window.location.search);
 
-        let id = params.get('id') || params.get('ID') || 'G09-05739';
+        let id = params.get('id') || params.get('ID') || '';
         let name = params.get('n') || params.get('name');
         let dept = params.get('dept');
         let mob = params.get('m') || params.get('mob');
@@ -515,9 +515,9 @@
 
         function applyPassData(pId, pName, pDept, pMob, pDuty, pRole, pPhoto) {
             document.getElementById('dispSerial').textContent = pId.startsWith('क्र.') ? pId : ('क्र.' + pId);
-            document.getElementById('dispName').textContent = pName || 'अंशुमन';
+            document.getElementById('dispName').textContent = pName || '';
             document.getElementById('dispDept').textContent = (pDept || 'Dr Rammanohar Lohia Awadh University Ayodhya') + ' ';
-            document.getElementById('dispMob').textContent = pMob || '9161914850';
+            document.getElementById('dispMob').textContent = pMob || '';
             document.getElementById('dispDuty').textContent = pDuty || 'राम की पैड़ी घाट नं : 9';
             document.getElementById('dispRole').textContent = pRole || 'स्वयंसेवक';
 

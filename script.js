@@ -61,7 +61,7 @@ function getPublicPassUrl() {
     baseUrl = window.location.origin + '/';
   }
 
-  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '');
 
   if (currentLinkType === 'direct') {
     return `${baseUrl}pass.html?id=${encodeURIComponent(idVal)}`;
@@ -77,7 +77,7 @@ async function makeTinyUrlNow() {
   if (spinner) spinner.style.display = 'inline';
 
   const longUrl = getPublicPassUrl();
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const passId = (inputPassId ? inputPassId.value.trim() : '');
 
   try {
     // Generate clean short URL via TinyURL with alias
@@ -100,15 +100,15 @@ async function makeTinyUrlNow() {
 
 // Update the live preview card and debounced QR code
 function updatePass() {
-  const idVal = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
-  const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
+  const idVal = (inputPassId ? inputPassId.value.trim() : '');
+  const nameVal = (inputName ? inputName.value.trim() : '');
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
-  const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
+  const mobVal = (inputMobile ? inputMobile.value.trim() : '');
   const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
   const photoVal = inputPhotoUrl ? inputPhotoUrl.value.trim() : '';
 
-  if (dispSerial) dispSerial.textContent = 'क्र.' + idVal;
+  if (dispSerial) dispSerial.textContent = idVal ? ('क्र.' + idVal) : '';
   if (dispName) dispName.textContent = nameVal;
   if (dispRole) dispRole.textContent = roleVal;
   if (dispDuty) dispDuty.textContent = dutyVal;
@@ -186,7 +186,7 @@ async function uploadImageFile(file) {
   localReader.onload = function(evt) {
     const base64Local = evt.target.result;
     if (dispPhoto) dispPhoto.src = base64Local;
-    const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+    const passId = (inputPassId ? inputPassId.value.trim() : '');
     try {
       localStorage.setItem('pass_photo_' + passId, base64Local);
     } catch (e) {}
@@ -213,7 +213,7 @@ async function uploadImageFile(file) {
       if (inputPhotoUrl) inputPhotoUrl.value = permanentUrl;
       if (dispPhoto) dispPhoto.src = permanentUrl;
 
-      const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+      const passId = (inputPassId ? inputPassId.value.trim() : '');
       localStorage.setItem('pass_photo_' + passId, permanentUrl);
 
       if (uploadStatus) {
@@ -293,7 +293,7 @@ function setAvatar(url) {
   if (dispPhoto) dispPhoto.src = url;
   if (uploadStatus) uploadStatus.style.display = 'none';
 
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
+  const passId = (inputPassId ? inputPassId.value.trim() : '');
   localStorage.setItem('pass_photo_' + passId, url);
   updatePass();
 }
@@ -341,11 +341,11 @@ function restoreFormState() {
 
 // Save Pass Record to Local Storage & Cloud Database
 async function savePassRecord() {
-  const passId = (inputPassId ? inputPassId.value.trim() : '') || 'G09-05739';
-  const nameVal = (inputName ? inputName.value.trim() : '') || 'अंशुमन';
+  const passId = (inputPassId ? inputPassId.value.trim() : '');
+  const nameVal = (inputName ? inputName.value.trim() : '');
   const roleVal = (inputRole ? inputRole.value.trim() : '') || 'स्वयंसेवक';
   const dutyVal = (inputDuty ? inputDuty.value.trim() : '') || 'राम की पैड़ी घाट नं : 9';
-  const mobVal = (inputMobile ? inputMobile.value.trim() : '') || '9161914850';
+  const mobVal = (inputMobile ? inputMobile.value.trim() : '');
   const deptVal = (inputDept ? inputDept.value.trim() : '') || 'Dr Rammanohar Lohia Awadh University Ayodhya';
   const photoVal = (inputPhotoUrl ? inputPhotoUrl.value.trim() : '') || DEFAULT_AVATAR;
 
